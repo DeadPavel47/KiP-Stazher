@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Учи меню — шпаргалка кассира</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink: #2A1E14;
+  --ink-soft: #5C4B3A;
+  --paper: #F6EEDF;
+  --paper-deep: #EFE2C9;
+  --board: #21160F;
+  --board-soft: #2E2016;
+  --chalk: #F3ECDD;
+  --caramel: #C2894F;
+  --caramel-deep: #A66C33;
+  --rust: #B14A2E;
+  --sage: #7C8A55;
+  --plum: #8C5A6B;
+  --line: rgba(42,30,20,0.14);
+  --line-dark: rgba(243,236,221,0.16);
+  --shadow: 0 10px 30px rgba(33,22,15,0.16);
+  --radius: 14px;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+.app{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px 16px 60px;
+}
+
+/* ---------- Header ---------- */
+.hero{
+  background: var(--board);
+  color: var(--chalk);
+  border-radius: 20px;
+  padding: 28px 24px 22px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.hero::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 85% 20%, rgba(194,137,79,0.25), transparent 55%),
+                     radial-gradient(circle at 10% 90%, rgba(124,138,85,0.18), transparent 50%);
+  pointer-events: none;
+}
+.hero-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+}
+.hero-text{ flex: 1; min-width: 0; }
+.hero-logo{
+  flex-shrink: 0;
+  width: 92px;
+  height: auto;
+  opacity: 0.95;
+}
+@media (max-width: 560px){
+  .hero-row{ flex-direction: column; align-items: flex-start; }
+  .hero-logo{ width: 64px; align-self: flex-end; margin-top: -8px; }
+}
+.easter-egg-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(33,22,15,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.easter-egg-overlay.show{ opacity: 1; }
+.easter-egg-overlay img{
+  max-width: 78vw;
+  max-height: 78vh;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.hero-eyebrow{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--caramel);
+  margin-bottom: 8px;
+  position: relative;
+}
+.hero h1{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(26px, 5vw, 34px);
+  margin: 0 0 6px;
+  position: relative;
+  letter-spacing: -0.01em;
+}
+.hero p{
+  margin: 0;
+  color: rgba(243,236,221,0.72);
+  font-size: 14.5px;
+  max-width: 60ch;
+  position: relative;
+}
+.hero-stats{
+  display:flex;
+  gap: 18px;
+  margin-top: 16px;
+  position: relative;
+  flex-wrap: wrap;
+}
+.hero-stat{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--chalk);
+  background: rgba(243,236,221,0.08);
+  border: 1px solid var(--line-dark);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.hero-stat b{ color: var(--caramel); font-weight: 500; }
+
+/* ---------- Tabs ---------- */
+.tabbar{
+  display: flex;
+  gap: 6px;
+  background: var(--paper-deep);
+  padding: 5px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.tabbtn{
+  flex: 1;
+  min-width: fit-content;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.tabbtn.active{
+  background: var(--board);
+  color: var(--chalk);
+}
+.tabbtn:not(.active):hover{
+  background: rgba(42,30,20,0.06);
+}
+
+.view{ display: none; }
+.view.active{ display: block; }
+
+/* ---------- Menu controls ---------- */
+.controls{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.search{
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+}
+.search:focus{ outline: 2px solid var(--caramel); outline-offset: 1px; }
+
+.chips{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.chip{
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .15s;
+}
+.chip.active{
+  background: var(--rust);
+  border-color: var(--rust);
+  color: #fff;
+}
+
+/* ---------- Grid / Cards ---------- */
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.card{
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.card-img{
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background: var(--paper-deep);
+  display: block;
+}
+.card-body{ padding: 12px 13px 13px; }
+.card-cat{
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--caramel-deep);
+  margin-bottom: 4px;
+}
+.card-name{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+.card-kbju{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.kbju-item{
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.kbju-item svg{ color: var(--caramel-deep); flex-shrink: 0; }
+
+.empty{
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(33,22,15,0.55);
+  z-index: 100;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 14px;
+  overflow-y: auto;
+}
+.modal-overlay.open{ display: flex; }
+.modal{
+  background: #fff;
+  border-radius: 18px;
+  max-width: 520px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal-img-wrap{ position: relative; }
+.modal-img{
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  display: block;
+  background: var(--paper-deep);
+}
+.modal-close{
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(33,22,15,0.65);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-body{ padding: 20px 22px 24px; }
+.modal-cat{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--caramel-deep);
+  margin-bottom: 4px;
+}
+.modal-name{
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+.modal-kbju{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.modal-kbju .kbju-pill{
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: var(--paper);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+.modal-kbju .kbju-pill svg{ color: var(--caramel-deep); flex-shrink: 0; }
+.modal-section{ margin-bottom: 14px; }
+.modal-label{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rust);
+  margin-bottom: 4px;
+}
+.modal-text{ font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+.modal-note{
+  background: #FBF1E0;
+  border: 1px solid #EAD3A0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #6B4E1E;
+}
+.replace-btn{
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rust);
+  background: none;
+  border: 1px solid var(--rust);
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.replace-btn:hover{ background: rgba(177,74,46,0.08); }
+
+/* ---------- Quiz ---------- */
+.quiz-wrap{
+  text-align: center;
+}
+.quiz-scorebar{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.quiz-mode-toggle{
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.quiz-card{
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  max-width: 480px;
+  margin: 0 auto;
+}
+.quiz-img{
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background: var(--paper-deep);
+}
+.quiz-qbody{ padding: 18px 20px 22px; }
+.quiz-question{
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: left;
+}
+.quiz-options{ display: flex; flex-direction: column; gap: 9px; }
+.quiz-opt{
+  text-align: left;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: 13.5px;
+  line-height: 1.4;
+  cursor: pointer;
+  color: var(--ink);
+  transition: all .12s;
+}
+.quiz-opt:hover{ border-color: var(--caramel); }
+.quiz-opt.correct{ background: #E4EEDA; border-color: var(--sage); }
+.quiz-opt.wrong{ background: #F5DEDA; border-color: var(--rust); }
+.quiz-opt.disabled{ pointer-events: none; opacity: 0.7; }
+.quiz-next{
+  margin-top: 16px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: var(--board);
+  color: var(--chalk);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: none;
+}
+.quiz-next.show{ display: inline-block; }
+
+/* ---------- Exam ---------- */
+.exam-group{ margin-bottom: 22px; }
+
+.shift-section{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.shift-header{
+  padding: 16px 18px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.shift-title{
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--rust);
+}
+.shift-arrow{
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+  transition: transform .15s;
+  flex-shrink: 0;
+}
+.shift-section.open .shift-arrow{ transform: rotate(90deg); }
+.shift-body{
+  display: none;
+  padding: 0 18px 18px;
+}
+.shift-section.open .shift-body{ display: block; }
+.shift-intro{
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.shift-list{
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.shift-list li{
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.shift-outro{
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--rust);
+  text-align: center;
+}
+.shift-sublock{ margin-top: 16px; }
+.shift-subheading{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.shift-highlight{
+  margin-top: 16px;
+  background: #FBF1E0;
+  border: 1px solid #EAD3A0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #6B4E1E;
+  text-align: center;
+}
+.exam-group-title{
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--rust);
+}
+.exam-card{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.exam-q{
+  font-weight: 600;
+  font-size: 14.5px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+.exam-q-arrow{
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+  flex-shrink: 0;
+  transition: transform .15s;
+}
+.exam-card.open .exam-q-arrow{ transform: rotate(90deg); }
+.exam-a{
+  display: none;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.exam-card.open .exam-a{ display: block; }
+.exam-note{
+  margin-top: 8px;
+  background: #FBF1E0;
+  border: 1px solid #EAD3A0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  color: #6B4E1E;
+}
+.exam-custom-badge{
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #4F6B2E;
+  background: #E9F0DD;
+  padding: 3px 9px;
+  border-radius: 6px;
+  margin-top: 8px;
+  width: fit-content;
+}
+.exam-edit-row{
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.exam-edit-btn, .exam-revert-btn{
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.exam-edit-btn:hover, .exam-revert-btn:hover{ border-color: var(--caramel); color: var(--ink); }
+.exam-edit-form{ margin-top: 10px; }
+.exam-edit-textarea{
+  width: 100%;
+  min-height: 96px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  resize: vertical;
+  box-sizing: border-box;
+}
+.exam-edit-textarea:focus{ outline: 2px solid var(--caramel); outline-offset: 1px; }
+.exam-edit-actions{
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.exam-save-btn{
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--board);
+  color: var(--chalk);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.exam-cancel-btn{
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ---------- Exam quiz ---------- */
+.eq-progress{
+  height: 8px;
+  background: var(--paper-deep);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.eq-progress-fill{
+  height: 100%;
+  background: var(--sage);
+  transition: width .3s;
+}
+.eq-card{
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px 24px 22px;
+  text-align: left;
+}
+.eq-cat{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--caramel-deep);
+  margin-bottom: 8px;
+}
+.eq-q{
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.eq-answer{
+  display: none;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--line);
+  padding-top: 14px;
+  margin-top: 4px;
+}
+.eq-answer.show{ display: block; }
+.eq-reveal-btn{
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--board);
+  color: var(--chalk);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.eq-actions{
+  display: none;
+  gap: 10px;
+  margin-top: 18px;
+}
+.eq-actions.show{ display: flex; }
+.eq-btn{
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.eq-btn.know{ background: #E4EEDA; color: #3F5326; }
+.eq-btn.review{ background: #F5DEDA; color: #7A2E1A; }
+
+.empty-quiz{
+  text-align: center;
+  padding: 30px;
+  color: var(--ink-soft);
+}
+
+footer.note{
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 12px;
+  margin-top: 30px;
+  opacity: 0.7;
+}
+
+@media (max-width: 480px){
+  .hero{ padding: 22px 18px 18px; }
+  .grid{ grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div class="hero-row">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Шпаргалка стажёра-кассира</div>
+        <h1>Учи меню и билеты к экзамену</h1>
+        <p>Шпаргалка - составы, описание, тесты.</p>
+        <div class="hero-stats">
+          <div class="hero-stat">Позиций в меню: <b id="stat-menu">0</b></div>
+          <div class="hero-stat">Вопросов экзамена: <b id="stat-exam">0</b></div>
+        </div>
+      </div>
+      <img class="hero-logo" id="hero-logo" src="data:image/png;base64,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" alt="Логотип кофейни КиП — Кофе и Приятности">
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <button class="tabbtn active" data-view="menu">Меню</button>
+    <button class="tabbtn" data-view="menuquiz">Тест по меню</button>
+    <button class="tabbtn" data-view="exam">Билеты экзамена</button>
+    <button class="tabbtn" data-view="examquiz">Тест по билетам</button>
+    <button class="tabbtn" data-view="shift">Смена</button>
+  </div>
+
+  <!-- MENU VIEW -->
+  <div class="view active" id="view-menu">
+    <div class="controls">
+      <input class="search" id="menu-search" type="text" placeholder="Найти блюдо или напиток...">
+    </div>
+    <div class="chips" id="menu-chips"></div>
+    <div class="grid" id="menu-grid"></div>
+    <div class="empty" id="menu-empty" style="display:none;">Ничего не найдено — попробуй другой запрос.</div>
+  </div>
+
+  <!-- MENU QUIZ VIEW -->
+  <div class="view" id="view-menuquiz">
+    <div class="quiz-mode-toggle" style="flex-wrap:wrap;">
+      <button class="chip active" id="mq-mode-a" data-mode="composition">Блюдо → состав</button>
+      <button class="chip" id="mq-mode-b" data-mode="name">Состав → блюдо</button>
+      <button class="chip" id="mq-mode-c" data-mode="description">Блюдо → описание</button>
+      <button class="chip" id="mq-mode-d" data-mode="descName">Описание → блюдо</button>
+    </div>
+    <div class="quiz-scorebar">
+      <span id="mq-score">Счёт: 0 / 0</span>
+      <span id="mq-streak"></span>
+    </div>
+    <div class="quiz-wrap" id="mq-wrap"></div>
+  </div>
+
+  <!-- EXAM VIEW -->
+  <div class="view" id="view-exam">
+    <div class="controls">
+      <input class="search" id="exam-search" type="text" placeholder="Найти вопрос...">
+    </div>
+    <div id="exam-groups"></div>
+  </div>
+
+  <!-- EXAM QUIZ VIEW -->
+  <div class="view" id="view-examquiz">
+    <div class="eq-progress"><div class="eq-progress-fill" id="eq-progress-fill" style="width:0%"></div></div>
+    <div class="quiz-scorebar">
+      <span id="eq-stat">Выучено: 0 / 32</span>
+      <button class="replace-btn" id="eq-reset" style="border-color:var(--ink-soft);color:var(--ink-soft);">Сбросить прогресс</button>
+    </div>
+    <div id="eq-wrap"></div>
+  </div>
+
+  <!-- SHIFT VIEW -->
+  <div class="view" id="view-shift">
+    <div id="shift-groups"></div>
+  </div>
+</div>
+
+<div class="easter-egg-overlay" id="easter-egg-overlay">
+  <img src="data:image/jpeg;base64,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" alt="">
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-img-wrap">
+      <img class="modal-img" id="modal-img">
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-cat" id="modal-cat"></div>
+      <h2 class="modal-name" id="modal-name"></h2>
+      <div class="modal-kbju" id="modal-kbju"></div>
+
+      <div class="modal-section">
+        <div class="modal-label">Состав</div>
+        <div class="modal-text" id="modal-comp"></div>
+      </div>
+      <div class="modal-section" id="modal-desc-wrap">
+        <div class="modal-label">Описание для гостя</div>
+        <div class="modal-text" id="modal-desc"></div>
+      </div>
+      <div class="modal-section" id="modal-note-wrap">
+        <div class="modal-note" id="modal-note"></div>
+      </div>
+
+      <input type="file" id="modal-file-input" accept="image/*" style="display:none;">
+      <button class="replace-btn" id="modal-replace">Заменить фото</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MENU_DATA = [{"name": "Сырник", "subcategory": "Выпечка сладкая", "kbju": "Б-4,9, Ж-11, У-25,      220,3 ккал", "composition": "Творог 5%, сахарный песок, мука рисовая, крахмал кукурузный, масло растительное, соль, ванилин.", "description": "Сырники из 5% творога и рисовой муки. Плотный, чувствуется зернистый творог, содержит сахар, без глютена.", "note": "Глютен — растительный белок в пшенице, ржи и ячмене (содержится в муке и большинстве выпечки). Лактоза — молочный сахар, содержится в молоке и молочных продуктах.", "id": 1, "category": "Выпечка", "img_query": "syrniki cottage cheese pancakes"}, {"name": "Сырник с вишней", "subcategory": "Выпечка сладкая", "kbju": "Б-10,5 Ж-5,4, У-17,      199,8 ккал", "composition": "Творог 5%,кукузурный крахмал,сахар,манная крупа, яйцо, ароматизатор ваниль, вишневое варенье", "description": "Сырник с вишневой начинкой из манной крупы, поэтому такой плотный, тесто больше похоже на оладьи.", "note": null, "id": 2, "category": "Выпечка", "img_query": "syrniki cherry cottage cheese pancakes"}, {"name": "Сырник нежный", "subcategory": "Выпечка сладкая", "kbju": "Б:5,2/ Ж:11/ У:21,4       205 ккал", "composition": "творог 5%, сахарный песок, яичный меланж, вода, крахмал кукурузный, мука рисовая, масло растительное, ванилин.", "description": "Воздушные сырники из 5% творога и рисовой муки. Отличаются от классических более нежной текстурой. С сахаром, без глютена.", "note": null, "id": 3, "category": "Выпечка", "img_query": "syrniki cottage cheese pancakes"}, {"name": "Тофник 60г", "subcategory": "Выпечка сладкая", "kbju": "Б:5/ Ж:2,2/ У:13              92 ккал", "composition": "соевый продукт тофу (соевый творог), мука рисовая, сахар, кокосовая стружка, кокосовое молоко, ванилин, соль", "description": "Сырники из тофу с кокосом, плотные с кокосовым послевкусием. Всего 92 ккал в 100г. Без глютена, без лактозы, веган. СОДЕРЖАТ САХАР.", "note": null, "id": 4, "category": "Выпечка", "img_query": "tofu pancakes"}, {"name": "Сочень", "subcategory": "Выпечка сладкая", "kbju": "389кКал Б: 7,4 г Ж: 20,3 г У: 44 г", "composition": "Мука пшеничная, творог, сахар, вода, маргарин, растительное масло, соль, ванилин", "description": "Сочень - это песочное тесто с творожной начинкой. Перед выкладкой посыпаем сахарной пудрой", "note": null, "id": 5, "category": "Выпечка", "img_query": "shortcrust pastry curd"}, {"name": "Круассан классический", "subcategory": "Выпечка сладкая", "kbju": "Масса: 70 г\n Б: 6,5 г Ж: 18 г У: 38 г\n 340 кКал", "composition": "Мука пшеничная в/с, масло сливочное, вода питьевая , Дрожжи хлебопекарные, сахар, яйцо, соль, глютен пшеничный, Дрожжи сухие хлебопекарные, аскорбиновая кислота .", "description": "Сливочный круассан из слоёного теста.", "note": null, "id": 6, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан с абрикосом", "subcategory": "Выпечка сладкая", "kbju": "Б -6, Ж - 15, У - 42 ККАЛ 320", "composition": "Мука пшеничная в\\с, вода питьевая, масло пальмовое, дрожжи хлебопекарные, масло сливочное, глютен пшеничный, рапсовое масло, соль, абрикосовое варенье.", "description": "Круассан из слоеного теста с абрикосовой начинкой.", "note": null, "id": 7, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан Ванильный (Заварной)", "subcategory": "Выпечка сладкая", "kbju": "Массса: 110 г 420кКал Б: 8 г Ж: 21 г У: 43 г", "composition": "Мука пшеничная в/с, начинка (сахар, фундук, обезжиренный какао-порошок, обезжиренное сухое молоко, миндаль натуральный ароматизатор ваниль), вода питьевая, дрожжи хлебопекарные, сахар, масло сливочное, соль, глютен пшеничный, дрожжи сухие хлебопекарные, натуральный ароматизатор, вещество для обработки муки (антиокислитель Аскорбиновая кислота), яйцо, ванильный крем.", "description": "Круассан из слоёного теста с нежным заварным кремом.", "note": null, "id": 8, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан с шоколадно- ореховой начинкой", "subcategory": "Выпечка сладкая", "kbju": "Б-8 Ж- У-43 кК- 420", "composition": "Мука пшеничная в/с, начинка (сахар, фундук, обезжиренный какао-порошок, обезжиренное сухое молоко, миндаль натуральный ароматизатор ваниль), вода питьевая, дрожжи хлебопекарные, шоколад (сахар, какао-масса, какао-масло,), сахар, масло сливочное, соль, глютен пшеничный, дрожжи сухие хлебопекарные, натуральный ароматизатор, вещество для обработки муки (антиокислитель Аскорбиновая кислота), яйцо. Может содержать семена кунжута.", "description": "Круассан из слоёного теста с шоколадно-ореховой начинкой.", "note": null, "id": 9, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан с шоколадом (Своего производства)", "subcategory": "Выпечка сладкая", "kbju": null, "composition": "Мука пшеничная в/с, масло сливочное, вода питьевая , Дрожжи хлебопекарные, сахар, яйцо, соль, глютен пшеничный, Дрожжи сухие хлебопекарные, аскорбиновая кислота , шоколад молочный, сливки", "description": "Делаем сами из классического круассана и хорошего шоколада. Круассан из слоёного теста с шоколадной начинкой. Начинка из молочного шоколада с добавлением сливок. Сверху полит шоколадом и сублимированной клубникой.", "note": null, "id": 10, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан с малиной", "subcategory": "Выпечка сладкая", "kbju": "Б-6г, Ж-16г,У-39г Ккал-330", "composition": "Мука пшеничная, сладко-сливочное масло, начинка плодово-ягодная \"Малина,\" молоко пастеризованное, сахар, улучшитель хлебопекарный, концентрат шиповника, сок вишневый.", "description": "Круассан из слоеного теста с малиновой начинкой.", "note": null, "id": 11, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан миндальный", "subcategory": "Выпечка сладкая", "kbju": "Б-7,5; Ж-19; У-39; Ккал -360", "composition": "Мука пшеничная в/с, вода, дрожжи, сахар, масло сливочное, соль,глютен пшеничный, яйцо, (начинка- сахар,миндаль, белые бобы, сахарный сироп, соль), миндаль.", "description": "Круассан из слоёного теста с начинкой марципан(перемолотый миндаль с сахаром)", "note": null, "id": 12, "category": "Выпечка", "img_query": "croissant"}, {"name": "Круассан фисташковый", "subcategory": "Выпечка сладкая", "kbju": null, "composition": "Мука пшеничная в/с, масло сливочное, вода питьевая , Дрожжи хлебопекарные, сахар, яйцо, соль, глютен пшеничный, Дрожжи сухие хлебопекарные, аскорбиновая кислота, фисташковый крем, посыпка.", "description": "Круассан из слоённого теста с начинкой из перетертой фисташки с сахаром и посыпкой.", "note": null, "id": 13, "category": "Выпечка", "img_query": "croissant"}, {"name": "Синнабон (Своего производства)", "subcategory": "Выпечка сладкая", "kbju": null, "composition": "Мука пшеничная в/с, масло сливочное, сахар, дрожжи, молоко, соль, корица, сыр творожный, сахарная пудра, сливки 33%.", "description": "Сдобная булочка с корицей, сверху полита сливочным кремом из творожного сыра.", "note": null, "id": 14, "category": "Выпечка", "img_query": "cinnamon roll"}, {"name": "Шведская булочка (Своего производства)", "subcategory": "Выпечка сладкая", "kbju": null, "composition": "Мука пшеничная в/с, яйцо, молоко, соль, сахар, дрожжи, кардамон, масло сливочное, спред 82%, корица", "description": "Сдобная булочка с корицей и кардамоном.", "note": null, "id": 15, "category": "Выпечка", "img_query": "cardamom bun"}, {"name": "Булочка с маком (Своего производства)", "subcategory": "Выпечка сладкая", "kbju": "Б -5,55; Ж-12,51; У-36,2. Ккал 278,46", "composition": "Мука, масло сливочное, молоко, сахар, яйцо, дрожжи, соль, мак, лимон.", "description": "Сдобная сладкая булочка с маком.", "note": null, "id": 16, "category": "Выпечка", "img_query": "poppy seed bun"}, {"name": "Сосиска в тесте", "subcategory": "Выпечка сытная", "kbju": "Ж -19; Б -12,9; У - 38,3; Ккал - 376", "composition": "Мука пшеничная, дрожжи, вода, масло, сахар,соль, сосиска", "description": "Сдобное тесто и сосиски Черкизово. Полностью делаем сами", "note": null, "id": 17, "category": "Выпечка", "img_query": "sausage roll pigs in blanket"}, {"name": "Хачапури Пеновани (120 гр)", "subcategory": "Выпечка сытная", "kbju": "Ж -19,2; Б -9,9; У -26,7; Ккал 319,2", "composition": "Мука в/с пшеничная, маргарин, вода, соль,сыр Сулугуни, яйцо куриное.", "description": "Выпечка из слоеного теста  с сыром Сулугуни.", "note": null, "id": 18, "category": "Выпечка", "img_query": "khachapuri cheese bread"}, {"name": "Улитка с курицей и сыром (100 гр)", "subcategory": "Выпечка сытная", "kbju": "Ж-15 Б-14 У-25\n\n290 ККАЛ", "composition": "Тесто (мука пшеничная хлебопекарная в/с, вода питьевая, крахмал кукурузный, яичный меланж, масло подсолнечное рафинированное дезодорированное), начинка (полуфабрикат из мяса птицы натуральный бескостный с кожей, лук репчатый свежий, соль пищевая, перец черный молотый), яичный меланж.", "description": "Вкусная, сытная слойка с курицей и сыром в оригинальной форме. (Тесто фило)", "note": null, "id": 19, "category": "Выпечка", "img_query": "puff pastry snail pastry"}, {"name": "Турновер Итальянский (100 гр)", "subcategory": "Выпечка сытная", "kbju": "Б-6,6; Ж -22,7; У-39,7; Ккал -388,3", "composition": "Мука пшеничная в/с, томаты резаные в собственном соку, масло сливочное, олвика, сыр сиртаки, сахар,вода, яйцо куриное, молоко, дрожжи хлебопекарные, соль, сухое цельное молоко, улучшитель хлебопекарный, базилик.", "description": "Выпечка из слоенного теста с начинкой из сыра Сиртаки, томатов, оливок и базилика.", "note": null, "id": 20, "category": "Выпечка", "img_query": "turnover pastry"}, {"name": "Турновер с курицей (100г)", "subcategory": "Выпечка сытная", "kbju": "Б-9,0; Ж-21; У-24. Ккал-321", "composition": "Мука пшеничная в/с, маргарин, сыр Моцарелла, куриная грудка, молоко, сливки, дрожжи, соль, приправа для курицы.", "description": "Выпечка из слоенного теста с курицей и сыром моцарелла.", "note": null, "id": 21, "category": "Выпечка", "img_query": "turnover pastry"}, {"name": "Улитка с мясом (100г)", "subcategory": "Выпечка сытная", "kbju": "Б-11; Ж -25; У-26; Ккал-370", "composition": "Мука в/с пшеничная,соль, вода, масло подсолнечное, крахмал кукурузный. Свинина, говядина, лук.", "description": "Слоенная выпечка из теста фило с мясной начинкой из свинины и говядины с репчатым луком и специями.", "note": null, "id": 22, "category": "Выпечка", "img_query": "puff pastry snail pastry"}, {"name": "Круассан с ветчиной и сыром", "subcategory": "Выпечка сытная", "kbju": "Б -9, Ж-17, У-31                   ККАЛ 313", "composition": "Мука пшеничная в/с, вода питьевая,дрожжи хлебопекарные,глютен пшеничный, масло сливочное, соль, сыр, ветчина из индейки.", "description": "Круассан из слоеного теста с начинкой из ветчины индейки и сыра Моцарелла.", "note": null, "id": 23, "category": "Выпечка", "img_query": "croissant"}, {"name": "Слойка с ветчиной и сыром", "subcategory": "Выпечка сытная", "kbju": "Б-8; Ж -22; У-29; Ккал-344", "composition": "Мука пшеничная в/с, вода питьевая,дрожжи хлебопекарные,глютен пшеничный, масло сливочное, соль, карбонад свинной, сыр.", "description": "Слоеная выпечка из пшеничной муки с начинкой из карбонада свинного и сыра.", "note": null, "id": 24, "category": "Выпечка", "img_query": "puff pastry"}, {"name": "Ржаник с сыром и шпинатом", "subcategory": "Выпечка сытная", "kbju": "Б-4,4; Ж-5,4; У-25,3. Ккал-289", "composition": "Мука в/с, мука ржаная, соль,сахар, дрожжи пресованые, содовый экстракт, масло сливочное, вода, шпинат, крупа манная, сыр Голландский, творог, майонез.", "description": "Ржаная слоеная выпечка с начинкой из шпината и сыра", "note": null, "id": 25, "category": "Выпечка", "img_query": "rye pastry spinach"}, {"name": "Чизкейк Сан Себастьян", "subcategory": "Наши десерты", "kbju": "Б-7,2; Ж-31,4; У-17,5. Ккал-382", "composition": "Творожный сыр, сливки 33%, яйцо куриное, сахар, крахмал", "description": "Испанская версия чизкейка, основа из творожного сыра запекается при высокой температуре до подгорелой корочки, а внутри остается очень нежным.", "note": "Чизкейк придумал в 1990-х шеф-повар Сантьяго Ривера в баскетбольном баре La Viña в Сан-Себастьяне (Испания). Он специально пёк торт при высокой температуре без бортика из печенья, чтобы верх подгорал, а середина оставалась текучей — так появился фирменный «обожжённый» стиль, который позже разошёлся по всему миру.", "id": 26, "category": "Наши десерты", "img_query": "cheesecake"}, {"name": "Сметанник", "subcategory": "Наши десерты", "kbju": "Б-5,4; Ж-14,2; У-24,8. Ккал-250,4", "composition": "Мука пшеничная в/с, сметана 20%, сметана 30%, сахар, сливки 33%, масло сливочное", "description": "Десерт на основе сметанных коржей и сметанного крема.", "note": null, "id": 27, "category": "Наши десерты", "img_query": "sour cream cake"}, {"name": "Медовик", "subcategory": "Наши десерты", "kbju": "Б-0,9; Ж-12,2; У-23,9; Ккал- 208,7", "composition": "Мука в/с,яйцо, сметана 20%, сметана 30%, сахар,масло сливночное, мед,соль,сливки 33%, сахарная пудра", "description": "Десерт на основе медовых коржей и сметанного крема", "note": null, "id": 28, "category": "Наши десерты", "img_query": "honey cake"}, {"name": "Наполеон с пломбиром", "subcategory": "Наши десерты", "kbju": "Б-04,5; Ж-37,1; У-27,3. Ккал-461", "composition": "Слоеное бездрожжевое тесто, молоко 3,2%, желток, масло сливочное,крахмал, мука пшеничная в/с, сахарный песок, сгущенка, сливки, мороженое.", "description": "Классический десерт из слоеного теста с заварным кремом со сливками и мороженным.", "note": "Перед выкладкой посыпаем сахарной пудрой", "id": 29, "category": "Наши десерты", "img_query": "napoleon cake mille-feuille"}, {"name": "Тирамису", "subcategory": "Наши десерты", "kbju": "Б- 2; Ж-20; У-26. Ккал-263", "composition": "Сыр маскарпоне, творожный сыр, сливки 33%, сахарный песок, печенье Савоярди, эспрессо.", "description": "Нежный кофейный десерт из сыра Маскарпоне со сливками и печенья Савоярди пропитанного эспрессо.", "note": "Перед выкладкой посыпаем какао. Маскарпоне — мягкий сливочный итальянский сыр из сливок, без выраженной кислинки, с высокой жирностью (около 60–75%) — за счёт этого тирамису такое нежное и насыщенное.", "id": 30, "category": "Наши десерты", "img_query": "tiramisu"}, {"name": "Рикотник с апельсином", "subcategory": "Наши десерты", "kbju": "Ж- 14,8; Б- 4,7; У- 31,149; Ккал- 277,3", "composition": "Мука пшеничная в/с, сыр рикотта, яйцо куриное, масло сливочное, апельсин вместе с цедрой, сахарный песок, разрыхлитель.", "description": "Нежный пирог из сыра рикотта, сока и цедры апельсина.", "note": "Каждый кусочек украшаем четвертинкой свежего апельсина. Подавать в разогретом состоянии. Рикотта — мягкий итальянский сыр из молочной сыворотки, оставшейся после производства других сыров. У неё нежная зернистая текстура и лёгкий сливочный вкус.", "id": 31, "category": "Наши десерты", "img_query": "ricotta orange cake"}, {"name": "Баноффи Пай", "subcategory": "Наши десерты", "kbju": "Б- 3,1; Ж-21,6; У -35,1. Ккал-349", "composition": "Мука пшеничная в/с, яйцо куриное, масло сливочное, сахарный песок, вареная сгущенка, свежие бананы, сливки 33%", "description": "Английский десерт на основе из песочного теста, начинкой из свежих бананов, вареной сгущенки и НЕ сладкого крем чиза.", "note": null, "id": 32, "category": "Наши десерты", "img_query": "banoffee pie"}, {"name": "Булочка ШУ", "subcategory": "Наши десерты", "kbju": "Б-5,4; Ж-21,7; У-32. Ккал-343", "composition": "Мука пшеничная в/с, масло сливочное, яйцо куриное, молоко 3,2%, сливки 33%, сахарный песок.", "description": "Французская хрустящая булочка из заварного теста и начинкой из взбитых сливок. Булочка состоит из двух частей, верхняя называется кракелюр", "note": "Перед выкладкой посыпаем сахарной пудрой", "id": 33, "category": "Наши десерты", "img_query": "choux bun cream puff"}, {"name": "Картошка", "subcategory": "Наши десерты", "kbju": "Ж- 7,6; Б- 1,5; У- 15,4; Ккал- 139,7", "composition": "Мука пшеничная в/с, масло сливочное, яйцо куриное, какао, сгущеное молоко, сгущенка вареная, сахарный песок, разрыхлитель.", "description": "Десерт из шоколадного бисквита, сгущенки и какао облитый ганашем из темного шоколада.", "note": null, "id": 34, "category": "Наши десерты", "img_query": "chocolate potato cake dessert"}, {"name": "Кейк-Попс", "subcategory": "Наши десерты", "kbju": "Ж- 2,2; Б- 0,46; У- 4.4; Ккал- 40,613", "composition": "Мука пшеничная в/с, масло сливочное, яйцо куриное, какао, сгущеное молоко, сгущенка вареная, сахарный песок, разрыхлитель.", "description": "Конфетка из шоколадного бисквита со сгущенкой и какао, облитая глазурью из шоколада.", "note": null, "id": 35, "category": "Наши десерты", "img_query": "cake pops"}, {"name": "Трубочка Крем-Чиз", "subcategory": "Наши десерты", "kbju": null, "composition": "Мука пшеничная в/с, яйцо куриное, масло сливочное, сметана 20%, сахарный песок, творожный сыр, сливки 33%.", "description": "Хрустящие вафли с начинкой крем-чиз. (Творожный сыр, сливки, сахарная пудра)", "note": null, "id": 36, "category": "Наши десерты", "img_query": "wafer roll cream tube"}, {"name": "Трубочка с вареной сгущенкой", "subcategory": "Наши десерты", "kbju": null, "composition": "Мука пшеничная в/с, яйцо куриное, масло сливочное, сметана 20%, сахарный песок, вареная сгущенка.", "description": "Хрустящие вафли с начинкой вареная сгущенка", "note": null, "id": 37, "category": "Наши десерты", "img_query": "wafer roll cream tube"}, {"name": "Твин Пикс", "subcategory": "Наши десерты", "kbju": "Ж- 16,6; Б- 3,4; У- 40,9; Ккал- 327,9", "composition": "Мука пшеничная, сахар,крахмал, масло,яйцо,сметана, сахарная пудра, корица, мускатный орех,коньяк,вишня свежемороженая.", "description": "Пирог из песочного теста, начинка - вишня с коньяком, корицей и мускатным орехом. Очень ароматный в разогретом виде.", "note": "Подаем в разогретом виде. Хорошо рекомендовать с шариком мороженого. Название «Твин Пикс» отсылает к культовому сериалу Дэвида Линча, в котором один из главных символов — вишнёвый пирог и кофе. Наш пирог с вишней, корицей и мускатным орехом — гастрономическая отсылка к этому сериалу.", "id": 38, "category": "Наши десерты", "img_query": "cherry pie cinnamon"}, {"name": "Тарт брусничный", "subcategory": "Наши десерты", "kbju": "Ж- 14,305; Б- 3,3; У- 36,9; Ккал- 282,5", "composition": "Мука пшеничная,разрыхлитель, масло, сахар, яйцо,сметана 20%,сливки 33%,крахмал, свежемороженая брусника.", "description": "Пирог из песочного теста,со сметанной заливкой и брусникой.", "note": "Тарт-запеченное блюдо, состоящее из начинки на основе из теста с открытым верхом, не покрытым тестом", "id": 39, "category": "Наши десерты", "img_query": "lingonberry tart"}, {"name": "Тарт малиновый", "subcategory": "Наши десерты", "kbju": "Ж- 14,305; Б- 3,3; У- 37; Ккал- 290,5", "composition": "Мука пшеничная,разрыхлитель, масло, сахар, яйцо,сметана 20%,сливки 33%,крахмал, свежемороженая малина.", "description": "Пирог из песочного теста, со сметанной заливкой и малиной.", "note": null, "id": 40, "category": "Наши десерты", "img_query": "raspberry tart"}, {"name": "Тарт черничный", "subcategory": "Наши десерты", "kbju": "Ж- 14,305; Б- 3,4; У- 36,7; Ккал- 290,3", "composition": "Мука пшеничная,разрыхлитель, масло, сахар, яйцо,сметана 20%,сливки 33%,крахмал, свежемороженая черника", "description": "Пирог из песочного теста,со сметанной заливкой и черникой.", "note": null, "id": 41, "category": "Наши десерты", "img_query": "blueberry tart"}, {"name": "Три шоколада", "subcategory": "Наши десерты", "kbju": "Б-5,2; Ж-35,9; У-35,3; Ккал-485,3", "composition": "Мука пшеничная, яйцо, сахар,какао,молоко,сливки, шоколад", "description": "Шоколадный бисквит,  слои белого, молочного и темного шоколадных муссов", "note": null, "id": 42, "category": "Наши десерты", "img_query": "three chocolate mousse cake"}, {"name": "Красный Бархат", "subcategory": "Наши десерты", "kbju": "Б-19,3; Ж-4,7; У-47.6; Ккал-384", "composition": "Мука пшеничная, масло подсолнечное, сахар, соль, какао, разрыхлитель, сыр творожный , сахарная пудра, сливки 33%, сливки шантипак", "description": "Десерт из бисквита с какао и начинкой крем чиз.", "note": null, "id": 43, "category": "Наши десерты", "img_query": "red velvet cake"}, {"name": "Муравейник", "subcategory": "Наши десерты", "kbju": "Б-19,3; Ж-4,7; У-47.6; Ккал-384", "composition": "Мука пшеничная, сахар, яйцо, спред 82%, сгущенка варёная, шоколад темный", "description": "Десерт на песочной основе с вареной сгущенкой и маслом. Сверху поливается темным шоколадом", "note": null, "id": 44, "category": "Наши десерты", "img_query": "anthill cake russian dessert"}, {"name": "Меренговый рулет с малиной", "subcategory": "Наши десерты", "kbju": null, "composition": "Яичный белок, сахарная пудра, лимонная кислота, крахмал, сливки 33%, творожный сыр, ягоды малины, миндаль", "description": "Десерт, состоящий из тонкого слоя взбитых яичных белков с сахаром, запеченного в духовке и начинкой из крема и малины. Сверху украшен миндальными лепестками", "note": null, "id": 45, "category": "Наши десерты", "img_query": "meringue roll raspberry"}, {"name": "Брауни - чизкейк", "subcategory": "Наши десерты", "kbju": null, "composition": "Мука пшеничная в/с, шоколад темный, какао, сахар, яйцо, сыр творожный, соль, масло сливочное", "description": "Десерт из шоколадного бисквита с творожным сыром.", "note": null, "id": 46, "category": "Наши десерты", "img_query": "cheesecake"}, {"name": "Муссовое пирожное \"Сердце Амура\"", "subcategory": "Наши десерты", "kbju": null, "composition": "Мука пшеничная в/с, яйцо, сахар, какао, желатин, сливки 33%, молоко, крахмал, миндальные лепестки, клубника, шоколад молочный", "description": "Шоколадный муссовый десерт с клубникой. Шоколадный мусс, шоколадный бисквит с миндальными лепестками и клубничным конфи, сверху полит глазурью на основе белого  шоколада.", "note": null, "id": 47, "category": "Наши десерты", "img_query": "mousse cake heart strawberry"}, {"name": "Лимонная тарталетка", "subcategory": "Наши десерты", "kbju": null, "composition": "Мука миндальная,масло сливочное,пудра,яйцо, соль,сок лимона, крахмал картофельный,Сыр маскарпоне, сыр творожный,сливки", "description": "Основой идет тесто сабле, внутри лимонный курд, сверху сливочный крем на сливках,сырах маскарпоне и творожном, смешано с сахаром. Посыпано золотом.", "note": "Тесто сабле (Pâte Sablée) — один из классических видов песочного теста, которое используют для приготовления печенья, сладких тартов и корзиночек. Изделия из такого теста получаются хрупкими, нежными и рассыпчатыми.", "id": 48, "category": "Наши десерты", "img_query": "lemon tart"}, {"name": "Тарталетка \"Инжир-голубика\"", "subcategory": "Наши десерты", "kbju": null, "composition": "Мука миндальная,масло сливочное,пудра,яйцо, соль,пюре ягодное,пектин, крахмал картофельный,Сыр маскарпоне, сыр творожный,Сливки, голубика, миндальные лепестки", "description": "Основой идет тесто сабле, внутри конфи из инжира, сверху сливочный крем на сливках, сырах маскарпоне и творожный,украшено голубикой и миндальными лепестками.", "note": null, "id": 49, "category": "Наши десерты", "img_query": "fig blueberry tartlet"}, {"name": "Яблочный Пирог", "subcategory": "Десерты поставщика", "kbju": "239 ккал Б 2.15 Ж 10 У 33.86", "composition": "Яблоко, мука пшеничная, vegan маргарин, сахар, вода питьевая, крахмал кукурузный, соль, корица.", "description": "Песочный пирог с яблоком и корицей", "note": null, "id": 50, "category": "Десерты поставщик", "img_query": "apple pie"}, {"name": "Вишневый пирог", "subcategory": "Десерты поставщика", "kbju": "233 ккал Б 2.15 Ж 10 У 35", "composition": "Вишня, мука пшеничная, vegan маргарин, сахар, вода питьевая, крахмал кукурузный, соль.", "description": "Песочный пирог с вишневой начинкой", "note": null, "id": 51, "category": "Десерты поставщик", "img_query": "cherry pie"}, {"name": "Миндальный пирог БЕЗ ГЛЮТЕНА", "subcategory": "Десерты поставщика", "kbju": "249 ккал Б 3 Ж 12 У 35", "composition": "Миндальная мука, яйцо, сахар, сливки, сливочное масло, ваниль, соль.", "description": "Тонкие коржи на миндальной муке и сливочно-ванильный заварной крем. Декор лепестком миндаля.", "note": null, "id": 52, "category": "Десерты поставщик", "img_query": "almond cake"}, {"name": "Кокосовый пирог    БЕЗ ГЛЮТЕНА", "subcategory": "Десерты поставщика", "kbju": "397 ккал Б 7 Ж 30 У 22", "composition": "Кокосовая стружка, яйцо, сахар, сливки, сливочное масло, соль, ваниль, молочный шоколад, какао-масло, растительное масло.", "description": "Кокосовый пирог без муки с молочным шоколадом.", "note": null, "id": 53, "category": "Десерты поставщик", "img_query": "coconut cake"}, {"name": "Черничный Тарт", "subcategory": "Десерты поставщика", "kbju": "345 ккал Б 7 Ж 28 У 22", "composition": "Сахар, маргарин, мука пшеничная, мука ржаная, яйцо, сметана, черника, сыр творожный, сливки, сублимированная черника.", "description": "Тарт на песочном тесте из ржаной муки с запеченой сливочной начинкой и голубикой. Декор сливочным кремом и порошком из сублимированной черники.", "note": null, "id": 54, "category": "Десерты поставщик", "img_query": "blueberry tart"}, {"name": "Эспрессо двойной", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "Закладка зерна: 18-19 гр, на выходе 35-45 грамма напитка", "description": "ЭСПРЕССО ДЛЯ ЛЮБОГО НАПИТКА ВСЕГДА ГОТОВИМ ПО ВЕСАМ  Эспрессо 35-45 гр за 23-30 сек  пролива.   Закладка кофе примерно 18 - 19 грамм. Темперовка с усилием 10кг, стараться всегда темперовать с одинаковым усилием. Работаем по двойному коэффиценту (на входе 18 грамм молотого кофе) * 2 = на выходе 36 грамм эспрессо за 25 секунд. Далее меняем рецепт в зависимости от настроек и вкуса. Если у вас на входе 18,5 грамм кофе * 2 = 37 грамм эспрессо", "note": null, "id": 55, "category": "Напитки", "img_query": "espresso coffee"}, {"name": "Американо 250 мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "2 шота эспрессо+ вода", "description": "В стакан 250 мл наливаем горячей воды из термопота, в стакан с водой готовим эспрессо, делаем любого объема на выбор гостя. Можно сделать в стакан 350мл и предложить доп. эспрессо.", "note": null, "id": 56, "category": "Напитки", "img_query": "americano coffee"}, {"name": "Фильтр кофе 250 мл, 360 мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "Кофе, приготовленный методом однократного пролива горячей воды через фильтр. По вкусу мягкий, кислотный, менее плотный. Крепче американо.", "description": "Черный кофе заваренный другим способом, через капельную кофеварку. Используется разное зерно, более правильный способ для черного кофе. Коэффициент приготовления 16,5", "note": null, "id": 57, "category": "Напитки", "img_query": "filter coffee"}, {"name": "Воронка V60 250 мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "15 грамм кофе на 250 грамм воды. Черный кофе приготовленный ручным способом через воронку. Гость может выбрать зерно на свой вкус.", "description": "Приготовление по рецепту под зерно.", "note": null, "id": 58, "category": "Напитки", "img_query": "v60 pour over coffee"}, {"name": "Ред Ай 250мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "140 грамм фильтр-кофе и 2 шота эспрессо. Самый крепкий напиток из нашего меню.", "description": "Наливаем готовый фильтр- кофе и в него готовим эспрессо. Высокое содержание кофеина.", "note": null, "id": 59, "category": "Напитки", "img_query": "black coffee cup"}, {"name": "Кортадо 80 мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "1 шот эспрессо + молоко.", "description": "Готовится из эспрессо, с последующим добавлением горячего молока, в пропорциях 1:1. Маленький объем, всего 80г", "note": null, "id": 60, "category": "Напитки", "img_query": "cortado coffee"}, {"name": "Капучино Стандартный(180мл) Двойной(360мл)", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "СТАНДАРТ: 1 шот эспрессо + 180 мл молока; БОЛЬШОЙ: 2 шота эспрессо + 280 мл молока", "description": "В стакан готовим эспрессо, взбиваем молоко в питчере выливаем 1/3 молока в готовый эспрессо, хорошо перемешиваем в стакане, выливаем оставшееся молоко.", "note": null, "id": 61, "category": "Напитки", "img_query": "cappuccino"}, {"name": "Латте стандартный(250мл) Двойной(450мл)", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "СТАНДАРТ: 1 шот эспрессо + 200 мл молока; БОЛЬШОЙ: 2 шота эспрессо + 360 мл молока.", "description": "Взбиваем молоко выливем в стакан, готовим эспрессо в молочник, выливаем в готовое молоко.", "note": null, "id": 62, "category": "Напитки", "img_query": "latte coffee"}, {"name": "Раф (360 мл)", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "2 шота эспрессо + 280мл сливок 10%. Сливочный напиток на основе сливок и эспрессо.", "description": "В питчер готовим эспрессо, вливаем молоко и сливки по раскладке, взбиваем, выливаем готовый напиток в стакан.(по желанию гостя можно добавить ванильный сахар 3г. Об этом предварительно нужно спросить)", "note": null, "id": 63, "category": "Напитки", "img_query": "raf coffee latte art"}, {"name": "ФЛЭТ УАЙТ Стандарт (250мл)", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "СТАНДАРТ: 2 шота эспрессо + 200 мл молока;", "description": "1. Проливаем двойной эспрессо в стадартный стакан.2. Наливаем в питчер 280 мл молока по весам.3. Подогреваем молоко и слегка взбиваем, пенки быть практически не должно. 4. Вливаем молоко в эспрессо.", "note": null, "id": 64, "category": "Напитки", "img_query": "flat white coffee"}, {"name": "Мокачино (360мл)", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "2 шота эспрессо, 15 грамм горячего шоколада, 280г молока", "description": "Насыпаем в стакан 15гр горячего шоколада и готовим туда эспрессо, аккуратно перемешиваем венчиком чтобы убрать комочки. Взбиваем молоко как на капучино и вливаем с красивым рисунком.", "note": null, "id": 65, "category": "Напитки", "img_query": "mocha coffee"}, {"name": "Какао (360 мл)    НЕ СЛАДКИЙ, как горький шоколад.", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "20 г какао, 280 мл молока", "description": "В питчер наливаем молоко и немного подогреваем стимером, добавляем какао по весам, очень хорошо перемешиваем вспенивателем до разбивания комочков. Взбиваем на 10% для того, чтобы убрать пузырьки и догреваем до горячего. Наливаем готовый напиток в стакан. (Чем сильнее греем, тем гуще напиток)", "note": null, "id": 66, "category": "Напитки", "img_query": "hot cocoa"}, {"name": "Горячий шоколад (360 мл) СЛАДКИЙ, как молочный шоколад.", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "20 г горячего шоколада, 280 мл молока", "description": "В питчер наливаем молоко и немного подогреваем стимером, добавляем горячий шоколад по весам, очень хорошо перемешиваем вспенивателем до разбивания комочков. Взбиваем на 10% для того, чтобы убрать пузырьки и догреваем до горячего. Наливаем готовый напиток в стакан. (Чем сильнее греем, тем гуще напиток)", "note": null, "id": 67, "category": "Напитки", "img_query": "hot chocolate"}, {"name": "МАТЧА ЛАТТЕ (японский зеленый чай ) 360 мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "В 40г воды завариваем матчу (3 гр)  280 мл молока", "description": "1. Наливаем в питчер 50 грамм горячей воды из термопота, добавляем 3г матчи и хорошо перемешиваем, оставляем завариваться. 2. Наливаем в питчер 280 мл молока по весам и взбиваем. Есть три варианта приготовления, как латте, капучино или раф.", "note": null, "id": 68, "category": "Напитки", "img_query": "matcha latte green tea"}, {"name": "Голубая матча из цветков дикой тайской орхидеи (360 мл)", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "40г воды+ (3 гр матчи) + 280 мл молока", "description": "1. Наливаем в питчер 50 грамм горячей воды из термопота, добавляем 3г матчи и хорошо перемешиваем, оставляем завариваться. 2. Наливаем в питчер 280 мл молока по весам.", "note": null, "id": 69, "category": "Напитки", "img_query": "matcha latte"}, {"name": "Бебичино 250мл", "subcategory": "Состав эспрессо и кофейных напитков.", "kbju": null, "composition": "Молоко,сироп на выбор гостя,маршмеллоу", "description": "1.220 мл молока+10мл сиропа, вспенить. 2. Перелить в стакан, украсить 10 гр маршмеллоу", "note": null, "id": 70, "category": "Напитки", "img_query": "steamed milk marshmallow kids drink"}, {"name": "Глинтвейн 360мл", "subcategory": "СЕЗОННЫЕ НАПИТКИ", "kbju": null, "composition": "Сок вишни 150мл, сок граната 150мл, основа глинтвейна 10гр, специи, долька апельсина.", "description": "В питчер добавляем сок винограда 150мл и сок граната 150мл, основу глинтвейна 10гр, палочку корицы, бадьян 1 шт, гвоздику 2-3 шт. Взбиваем стимером до горячей температуры.", "note": null, "id": 71, "category": "Напитки", "img_query": "mulled wine"}, {"name": "Чай лимон/мёд/имбирь", "subcategory": "СЕЗОННЫЕ НАПИТКИ", "kbju": null, "composition": "Чай черный/зеленый, основа лимон/имбирь, мёд, заготовка из лимона с имбирём.", "description": "В чашку либо чайник добавляем чай, добавляем основу, добавляем мёд и замороженные ягоды.Всё делаем ПО ВЕСАМ. Перед отдачей перемешать ложкой.", "note": null, "id": 72, "category": "Напитки", "img_query": "lemon ginger tea"}, {"name": "Чай облепиха/апельсин", "subcategory": "СЕЗОННЫЕ НАПИТКИ", "kbju": null, "composition": "Чай черный/зеленый, основа облепиха, основа апельсин, заготовка из ягод.", "description": "В чашку либо чайник добавляем чай, добавляем обе основы, добавляем  замороженные ягоды. Всё делаем ПО ВЕСАМ.Перед отдачей перемешать ложкой.", "note": null, "id": 73, "category": "Напитки", "img_query": "sea buckthorn tea"}, {"name": "Чай в кружке/ стаканчике", "subcategory": "Чай и коктейли", "kbju": null, "composition": "любой чай из ассортимента", "description": "По весам закладываем в фильтр пакет 3 гр(~ 1 Ложка) чая, завязываем фильтр пакет, кладем в кружку/стакан", "note": null, "id": 74, "category": "Чай", "img_query": "tea cup"}, {"name": "Чай в чайнике 900 мл(маленький)", "subcategory": "Чай и коктейли", "kbju": null, "composition": "любой чай из ассортимента", "description": "По весам закладываем в фильтр пакет 9 гр чая, завязываем фильтр пакет, кладем в чайник объема 600 мл", "note": null, "id": 75, "category": "Чай", "img_query": "teapot"}, {"name": "Чай в чайнике 1500 мл(большой)", "subcategory": "Чай и коктейли", "kbju": null, "composition": "любой чай из ассортимента", "description": "По весам закладываем в колбу 12 гр чая,завязываем фильтр пакет, кладем в чайник объемом 1500 мл", "note": null, "id": 76, "category": "Чай", "img_query": "teapot"}, {"name": "Молочный коктейль класический 350 мл", "subcategory": "Чай и коктейли", "kbju": null, "composition": "Молоко классическое, мороженое, сироп по желанию гостя", "description": "В чашу блендера добавляем 150 гр мороженого по весам, также 200 мл молока, сироп 20 гр если необходим, перемешиваем в блендере.", "note": null, "id": 77, "category": "Чай", "img_query": "milkshake"}, {"name": "Молочный коктейль ШОКОЛДАДНЫЙ 350 мл", "subcategory": "Чай и коктейли", "kbju": null, "composition": "Молоко классическое, мороженое, какао", "description": "В чашу блендера по весам кладем 150 гр мороженого,также 200 мл молока, 10 гр какао,перемешиваем в блендере.", "note": null, "id": 78, "category": "Чай", "img_query": "milkshake"}, {"name": "Молочный коктейль НА РАСТИТЕЛЬНОМ МОЛОКЕ 350мл", "subcategory": "Чай и коктейли", "kbju": null, "composition": "Молоко растительное, мороженое, сироп по желанию гостя", "description": "В чашу добавляем 150 гр мороженого, наливаем 200 мл молока ПО ВЕСАМ, перемешиваем блендером.", "note": null, "id": 79, "category": "Чай", "img_query": "milkshake"}, {"name": "Эспрессо-шейк 350мл", "subcategory": "Чай и коктейли", "kbju": null, "composition": "Молоко классическое, мороженое, 2 шота эспрессо", "description": "В чашу блендера по весам кладем 150 гр мороженого,также 200 мл молока, вливаем эспрессо ,перемешиваем в блендере.", "note": null, "id": 80, "category": "Чай", "img_query": "espresso coffee"}, {"name": "Киш с овощами и карбонадом (Своего производства)", "subcategory": "Завтраки", "kbju": "Б-7,98; Ж-14,67; У-14,68. Ккал 223", "composition": "Мука пшеничная, масло сливочное, вода питьевая, яйца, сливки, карбонад,шпинат,кабачок, сахар, соль, перец черный молотый.", "description": "Открытый французкий пирог с овощами,карбонадом, залитый яйцом и сливками.(похож на омлет)", "note": null, "id": 81, "category": "Завтраки", "img_query": "quiche"}, {"name": "Киш с грибами и курой ( Своего производства)", "subcategory": "Завтраки", "kbju": "Б-6,3; Ж-9,73; У-10,81. Ккал-155", "composition": "Мука пшеничная, масло сливочное, вода питьевая, яйца, сливки, шампиньоны, кура, сахар, соль, перец черный молотый.", "description": "Открытый французкий пирог с грибами,курицей, залитый яйцом и сливками.(похож на омлет)", "note": null, "id": 82, "category": "Завтраки", "img_query": "quiche"}, {"name": "Грилд чиз с пепперони", "subcategory": "Завтраки", "kbju": null, "composition": "Тостовый хлеб, сыр  ред чеддер, сыр моцарелла и пепперони, соус болоньезе.", "description": "Горячий сендвич, делается на гриле с двумя видами сыра(моцарелла и чеддер), с соусом болоньезе и колбасой пепперони.", "note": null, "id": 83, "category": "Завтраки", "img_query": "grilled cheese sandwich"}, {"name": "Грилд чиз с курицей", "subcategory": "Завтраки", "kbju": null, "composition": "Тостовый хлеб, сыр ред чеддер, сыр моцарелла, запечённая курица, медово-горчичный соус", "description": "Горячий сендвич, делается на гриле с двумя видами сыра(моцарелла и чеддер), запечённой курицей и медово-горчичным соусом.", "note": null, "id": 84, "category": "Завтраки", "img_query": "grilled cheese sandwich"}, {"name": "Сендвич с курицей (Своего производства)", "subcategory": "Завтраки", "kbju": null, "composition": "Булочка чиабатта, запеченная курица, сыр ред чеддер, соус медово-горчичный, свежие томаты и листья салата.", "description": "Выпеченная булочка чиабатта, запеченная курица, сыр ред чеддер, соус медово-горчичный, свежие томаты и листья салата. Можно подать холодным или подогреть до расплавленного сыра, по желанию гостя.", "note": null, "id": 85, "category": "Завтраки", "img_query": "sandwich"}, {"name": "Сендвич с индейкой (Своего производства)", "subcategory": "Завтраки", "kbju": null, "composition": "Тостовый пшеничный хлеб, творожный сыр, сыр чеддер, томаты, салат фриллис, ветчина индейки.", "description": "Открытый холодный сендвич на тостовом хлебе с начинкой из творожного сыра, сыра чеддер, томатов, листьев салата и ветчиной из индейки.", "note": null, "id": 86, "category": "Завтраки", "img_query": "sandwich"}, {"name": "Сендвич с карбонадом и сыром чедер. (Своего производства)", "subcategory": "Завтраки", "kbju": "Б-8,99; Ж-13,55; У-14,09 Ккал-213", "composition": "Булочка чиабатта, свинной карбонад, сыр ред чедер, бургерный соус Heinz, свежие томаты и листья салата.", "description": "Булочка чиабатта, свинной карбонад, сыр ред чедер, бургерный соус Heinz, свежие томаты и листья салата. Можно отдавать холодным или погреть до расплавленного сыра по выбору гостя.", "note": null, "id": 87, "category": "Завтраки", "img_query": "sandwich"}, {"name": "Овсянная каша", "subcategory": "Завтраки", "kbju": null, "composition": "Овсянные хлопья, молоко безлактозное, соль, сахар, арахисовая паста, кешью, голубика.", "description": "Готовим по рецепту", "note": null, "id": 88, "category": "Завтраки", "img_query": "oatmeal porridge blueberry"}, {"name": "Рисовая каша", "subcategory": "Завтраки", "kbju": null, "composition": "Рис, безлактозное молоко. Соль, сахар, мёд, манго, сублимированная клубника.", "description": "Готовим по рецепту", "note": null, "id": 89, "category": "Завтраки", "img_query": "rice porridge mango"}, {"name": "Печенье с фундуком", "subcategory": "Печенье", "kbju": "Б 6.73; Ж 26.95; У 37.33", "composition": "Шоколад, масло сливочное, сахар, мука, яйцо, рубленый фундук, соль.", "description": null, "note": null, "id": 90, "category": "Печенье", "img_query": "hazelnut cookie"}, {"name": "Кокосовое печенье", "subcategory": "Печенье", "kbju": "Б 6.82; Ж 34.60; У 44.11", "composition": "Мука пшеничная, кокосовая стружка, сахар, масло сливочное, яйцо, разрыхлитель, молочный шоколад, соль.", "description": null, "note": "Кокосовая стружка представляет собой измельчённую и высушенную мякоть кокосового ореха", "id": 91, "category": "Печенье", "img_query": "coconut cookie"}, {"name": "Супершоколад", "subcategory": "Печенье", "kbju": "Б 5.15; Ж 23.71; У 54.74", "composition": "Сахар, мука, какао, яйцо, масло сливочное, темный шоколад.", "description": null, "note": null, "id": 92, "category": "Печенье", "img_query": "chocolate cookie"}, {"name": "Миндальное печенье", "subcategory": "Печенье", "kbju": "Б 6.63; Ж 25.95; У 31.33", "composition": "Миндальная мука, масло сливочное, сахар, яйцо, мука пшеничная, цедра апельсина, соль, разрыхлитель.", "description": null, "note": null, "id": 93, "category": "Печенье", "img_query": "almond cookie"}, {"name": "Лимонное печенье", "subcategory": "Печенье", "kbju": "Б 5.18; Ж 21.71; У 51.78", "composition": "Сахар, яйцо, масло растительное, мука, лимон, куркума, соль, разрыхлитель.", "description": null, "note": null, "id": 94, "category": "Печенье", "img_query": "lemon cookie"}, {"name": "Финансье с шоколадом", "subcategory": "Печенье", "kbju": "Б 6.29 Ж 27.01 У 35.72", "composition": "Яйца, масло сливочное, сахар, миндаль, мука пшеничная, разрыхлитель, соль, сливки, шоколад.", "description": null, "note": "Финансье – это небольшие французские пирожные.", "id": 95, "category": "Печенье", "img_query": "financier french cake almond"}];
+
+const EXAM_DATA = [{"id": 1, "category": "Кофе", "q": "Что такое кофе? (как вид, откуда получается кофейное зерно?)", "a": "Кофе — напиток, который готовят из обжаренных семян (зёрен) растения кофе (Coffea) — вечнозелёного тропического кустарника семейства Мареновые. То, что называют «зерном», на самом деле косточка кофейной вишни — плода этого растения."}, {"id": 2, "category": "Кофе", "q": "Что такое кофеин, где содержится и как действует на человека? Где ещё содержится кофеин (не считая кофейные напитки)?", "a": "Кофеин — природный алкалоид-стимулятор. Он блокирует рецепторы аденозина в мозге, из-за чего снижается чувство усталости, повышается концентрация внимания и учащается сердцебиение. Помимо кофе кофеин есть в чае, какао/шоколаде, гуаране, орехах кола, мате, энергетиках и некоторых лекарствах."}, {"id": 3, "category": "Кофе", "q": "Что такое спешелти кофе и спешелти кофейни?", "a": "Спешелти (specialty) кофе — зерно высшего качества, выращенное и обработанное с особым вниманием на всех этапах: от сбора урожая до обжарки. По 100-балльной шкале SCA спешелти считается кофе от 80 баллов и выше. Спешелти-кофейня — заведение, которое работает с таким зерном и уделяет внимание происхождению (сорт, регион, ферма), обработке и точному контролю приготовления напитка."}, {"id": 4, "category": "Кофе", "q": "На каких континентах растёт кофе?", "a": "В «кофейном поясе»: Южная и Центральная Америка, Африка, Азия и Океания."}, {"id": 5, "category": "Кофе", "q": "Как растёт кофе в Италии и как его обрабатывают, какие традиции? Почему итальянский кофе так популярен?", "a": "В Италии кофе не выращивают — своего кофе там нет, климат не подходит. Италия славится культурой обжарки и приготовления: традиционно используют смеси Арабики и Робусты, часто тёмной обжарки, эспрессо готовят маленькими крепкими порциями и пьют быстро, часто стоя у барной стойки. Популярность — из-за сложившейся веками культуры эспрессо-баров и устоявшихся строгих рецептов приготовления."}, {"id": 6, "category": "Кофе", "q": "Чем отличается Арабика от Робусты?", "a": "Арабика — мягче, ароматнее, с более выраженной кислотностью, кофеина ~1–1,5%, растёт на большей высоте, более прихотлива. Робуста — вкус грубее, горче, землистее, кофеина больше (~2–2,5%), растение неприхотливое и урожайное; часто добавляется в эспрессо-смеси для крепости и плотной пенки (крема)."}, {"id": 7, "category": "Кофе", "q": "Что такое дескрипторы в кофе? Какие они бывают (кофейное колесо)?", "a": "Дескрипторы — слова, которыми описывают вкус и аромат кофе: цитрусовые, ягодные, ореховые, шоколадные, цветочные, карамельные, землистые и т.д. Кофейное колесо ароматов (Coffee Taster's Flavor Wheel) — визуальная схема с группами дескрипторов (фруктовые, сладкие, ореховые/какао, пряные, цветочные и другие), которая помогает точнее описывать вкус чашки."}, {"id": 8, "category": "Кофе", "q": "Что такое decaf?", "a": "Decaf — декофеинизированный кофе, из которого удалили большую часть кофеина (обычно 97–99,9%) одним из способов декофеинизации (водным, СО2 или с растворителем), при этом вкус зерна в основном сохраняется."}, {"id": 9, "category": "Кофе", "q": "Что такое эспрессо, ристретто и лунго, чем отличаются?", "a": "Все три готовятся из одной дозы молотого кофе, но с разным объёмом воды на выходе. Эспрессо — стандартная порция. Ристретто — «укороченный» эспрессо: меньше воды, вкус более концентрированный и сладкий. Лунго — «удлинённый» эспрессо: больше воды, вкус менее концентрированный и более горький."}, {"id": 10, "category": "Кофе", "q": "Как правильно пить эспрессо, для чего нужна вода к чёрному кофе?", "a": "Эспрессо пьют сразу после приготовления, пока не разрушилась крема (пенка), небольшими глотками. Стакан воды подают, чтобы «обнулить» вкусовые рецепторы перед дегустацией — смыть остаточный вкус еды или напитков, чтобы гость почувствовал вкус кофе максимально чисто."}, {"id": 11, "category": "Кофе", "q": "Что такое «альтернатива», альтернативное заваривание кофе?", "a": "«Альтернатива» — способы заваривания кофе без эспрессо-машины: фильтр (пуровер), воронка V60, аэропресс, кемекс, френч-пресс и другие. Обычно дают более мягкий, чистый и раскрытый вкус, чем эспрессо."}, {"id": 12, "category": "Кофе", "q": "С какой обжаркой кофе мы работаем? Какие виды обжарки вы знаете?", "a": "У нас обжарка под эспрессо и отдельная под фильтр: под эспрессо — чуть темнее, под фильтр — чуть светлее."}, {"id": 13, "category": "Кофе", "q": "Что такое матча? Какие виды есть и какие свойства?", "a": "Матча — порошок из молотых листьев затенённого зелёного чая (Camellia sinensis), выращенного в Японии. Виды: церемониальная (высшего качества, пьётся без добавок) и кулинарная (для латте, выпечки, десертов). Содержит кофеин и L-теанин — они вместе дают спокойную, ровную бодрость без резкого скачка, а также антиоксиданты. «Голубая матча» — порошок из цветков голубого чая анчан (клитория тройчатая), кофеина в нём нет, вкус мягкий, травянисто-цветочный, а от лимона или другой кислоты напиток меняет цвет с синего на фиолетово-розовый."}, {"id": 14, "category": "Кофе", "q": "Какой напиток будет самым мягким, молочным?", "a": "Латте — в нём больше всего жидкого молока и минимум плотной пены, поэтому вкус самый мягкий и молочный из всей линейки."}, {"id": 15, "category": "Кофе", "q": "Чем отличается латте от капучино?", "a": "Оба готовятся на эспрессо и взбитом молоке, но пропорции разные. В капучино меньше молока и больше плотной молочной пены (эспрессо, молоко и пена — примерно поровну), вкус более выраженный, кофейный. В латте больше жидкого молока и тонкий слой пены — вкус мягче и более молочный."}, {"id": 16, "category": "Кофе", "q": "Что такое раф? Можно ли его приготовить на альтернативном молоке? Почему мы не готовим его с сиропом как везде?", "a": "Раф — напиток на основе эспрессо и сливок (не молока), взбитых вместе до плотной бархатистой текстуры, часто с ванильным сахаром. Его можно сделать на растительном молоке вместо сливок, но вкус и текстура будут более лёгкими, не такими сливочными. Сироп в раф не добавляют, потому что напиток изначально задуман как самодостаточно сладкий и сливочный за счёт ванильного сахара — лишний сироп делает вкус приторным и перебивает баланс."}, {"id": 17, "category": "Кофе", "q": "Что отвечать на вопрос: какие у вас есть сиропы?", "a": "Назвать категории вкусов: обычно это классика, пряные, ореховые, фрукты и ягоды."}, {"id": 18, "category": "Аллергены, молоко и составы", "q": "Какие есть правила внешнего вида и гигиены на рабочем месте?", "a": "Общие принципы: опрятная чистая форма и фартук, волосы собраны/убраны под головной убор, чистые аккуратные ногти без лака (или в перчатках при готовке), минимум украшений и резкого парфюма, чистые руки — мыть перед сменой, после посещения туалета и при смене операций (касса → еда), бейдж.", "note": "Точный внутренний регламент по внешнему виду уточни у управляющего — в файле с составами его нет."}, {"id": 19, "category": "Аллергены, молоко и составы", "q": "Что такое лактоза и глютен? В чём содержится?", "a": "Лактоза — молочный сахар, содержится в молоке и молочных продуктах (сливки, сметана, творог, сыр). Глютен — растительный белок («клейковина»), содержится в пшенице, ржи и ячмене, соответственно в муке и большинстве видов выпечки и хлеба."}, {"id": 20, "category": "Аллергены, молоко и составы", "q": "Что такое растительное и безлактозное молоко, чем отличаются? Какие по вкусу?", "a": "Растительное молоко (овсяное, миндальное, кокосовое, соевое) сделано из растительного сырья — в нём вообще нет ни молочного белка, ни лактозы, подходит веганам и людям с непереносимостью лактозы или аллергией на молочный белок. Безлактозное молоко — это обычное коровье молоко, из которого специальным ферментом расщепили лактозу; молочный белок в нём остаётся, поэтому оно не подходит веганам и при аллергии на белок молока, но подходит при непереносимости лактозы. На вкус: растительное — более ореховое или сладковатое в зависимости от вида, безлактозное — слаще обычного молока, потому что расщеплённая лактоза даёт более сладкие сахара (глюкозу и галактозу)."}, {"id": 21, "category": "Аллергены, молоко и составы", "q": "Какое молоко есть у нас в кофейне? Есть ли в нём сахар?", "a": "Обычное и безлактозное коровье молоко не содержат добавленного сахара — только натуральный молочный сахар (лактозу или её расщеплённые формы). В растительном молоке (например, овсяном) у некоторых брендов есть немного добавленного сахара — стоит проверять состав на упаковке конкретного бренда, который используется у вас.", "note": "Точный перечень видов молока в ассортименте вашей кофейни уточни на баре — он может меняться."}, {"id": 22, "category": "Аллергены, молоко и составы", "q": "Что такое сахарозаменитель, какие бывают?", "a": "Сахарозаменитель — вещество, заменяющее сахар по сладости, обычно с меньшей калорийностью. Природные: стевия, эритрит, ксилит. Синтетические: аспартам, сукралоза, сахарин, цикламат."}, {"id": 23, "category": "Аллергены, молоко и составы", "q": "Кто такие вегетарианцы и веганы, чем отличаются?", "a": "Вегетарианцы не едят мясо и рыбу, но в большинстве видов вегетарианства допускают продукты животного происхождения — молоко, яйца, мёд. Веганы полностью исключают любые продукты животного происхождения: мясо, рыбу, молоко, яйца, мёд, а часто и другие материалы животного происхождения (кожа, шёлк)."}, {"id": 24, "category": "Аллергены, молоко и составы", "q": "В чём отличие продуктов растительного и животного происхождения?", "a": "Продукты животного происхождения производятся из тела животных или благодаря им: мясо, рыба, молоко, яйца, мёд, желатин. Продукты растительного происхождения получают из растений: овощи, фрукты, злаки, орехи, бобовые, растительные масла — они не содержат ингредиентов животного происхождения."}, {"id": 25, "category": "Аллергены, молоко и составы", "q": "Основные аллергены в еде?", "a": "Основные пищевые аллергены: глютен (злаки), молоко и молочные продукты, яйца, орехи (и отдельно арахис), соя, рыба и морепродукты (ракообразные, моллюски), горчица, сельдерей, кунжут, сульфиты, люпин."}, {"id": 26, "category": "Аллергены, молоко и составы", "q": "Что такое сулугуни и сиртаки, откуда произошли?", "a": "Сулугуни — рассольный сыр родом из Грузии, из коровьего, буйволиного или смешанного молока, слоистой структуры и солоноватого вкуса. Сиртаки — плавящийся сыр греческого типа (похож на моцареллу/фету), часто используется как более доступная альтернатива моцарелле в запекании."}, {"id": 27, "category": "Аллергены, молоко и составы", "q": "Что такое заварной крем?", "a": "Заварной крем (крем патисьер) — классический кондитерский крем на основе молока, желтков, сахара и крахмала (или муки), уваренный на плите до загустения. Используется как начинка для эклеров, тарталеток, круассанов, наполеона и других десертов."}, {"id": 28, "category": "Аллергены, молоко и составы", "q": "Что такое тофу?", "a": "Тофу — соевый творог/сыр, продукт из свернувшегося соевого молока, спрессованного в блоки. Имеет нейтральный вкус, хорошо впитывает вкус других ингредиентов, богат растительным белком, не содержит лактозы и глютена — используется как веганская альтернатива творогу."}, {"id": 29, "category": "Практическая часть", "q": "Открытие и закрытие кассовой смены", "a": "Общий принцип: в начале смены — пересчитать разменную кассу и сверить с ожидаемой суммой, включить оборудование и кассовую программу. В конце смены — снять отчёт (Z-отчёт), пересчитать выручку, сверить с данными кассы, сдать выручку, выключить оборудование, привести рабочее место в порядок.", "note": "Точный пошаговый порядок открытия/закрытия смены — это внутренняя процедура именно вашей кофейни и кассовой системы, её нет в присланных файлах. Уточни точный чек-лист у наставника или управляющего."}, {"id": 30, "category": "Практическая часть", "q": "Как выпекать?", "a": "Сначала пекутся все сырники: 160° — 14 минут. Дальше в среднем 170° около 10 минут, затем 160° ещё 10–15 минут — точное время зависит от вида выпечки (у круассанов, хачапури, сочней и других позиций оно немного различается). Полный расклад по каждому виду — во вкладке «Смена» → «Правила выпекания»."}, {"id": 31, "category": "Практическая часть", "q": "Как правильно попросить мелочь у гостя и посчитать сдачу?", "a": "Если для ровной сдачи не хватает мелочи, можно вежливо спросить: «У вас не найдётся [нужная сумма] мелочью, чтобы сдача была ровной?» Если гость отказывается или мелочи нет — просто выдать сдачу как есть, точно посчитав разницу между суммой чека и полученными от гостя деньгами, и озвучить сумму сдачи вслух при выдаче."}, {"id": 32, "category": "Практическая часть", "q": "Как предлагать фильтр-кофе?", "a": "Фильтр-кофе стоит предлагать как альтернативу американо или эспрессо гостям, которые любят более мягкий и «чистый» вкус кофе без горечи — объяснить, что это чёрный кофе, заваренный через фильтр, а не в кофемашине, и что зерно для него можно выбрать по вкусу."}];
+
+</script>
+<script>
+// ============ Интеграция с Telegram Mini App ============
+// Если файл открыт как обычный сайт (не внутри Telegram), window.Telegram будет отсутствовать —
+// весь блок ниже просто ничего не делает, приложение работает как раньше.
+const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+function haptic(style){
+  if(!tg || !tg.HapticFeedback) return;
+  try{ tg.HapticFeedback.impactOccurred(style || 'light'); }catch(e){}
+}
+if(tg){
+  tg.ready();
+  tg.expand();
+
+  // Подхватываем цветовую тему Telegram (тёмная/светлая), если она заметно отличается
+  // от нашей палитры — иначе оставляем фирменный вид приложения.
+  const applyTelegramTheme = () => {
+    const p = tg.themeParams || {};
+    const root = document.documentElement.style;
+    if(tg.colorScheme === 'dark'){
+      if(p.bg_color)             root.setProperty('--paper', p.bg_color);
+      if(p.secondary_bg_color)   root.setProperty('--paper-deep', p.secondary_bg_color);
+      if(p.text_color)           root.setProperty('--ink', p.text_color);
+      if(p.hint_color)           root.setProperty('--ink-soft', p.hint_color);
+    }
+    // Красим системную шапку/фон Telegram под цвет нашей тёмной плашки, чтобы не было
+    // белой полосы над приложением.
+    try{ tg.setHeaderColor('#21160F'); }catch(e){}
+    try{ tg.setBackgroundColor(tg.colorScheme === 'dark' ? '#21160F' : '#F6EEDF'); }catch(e){}
+  };
+  applyTelegramTheme();
+  tg.onEvent('themeChanged', applyTelegramTheme);
+
+  // Кнопка "назад" в шапке Telegram закрывает открытую карточку блюда вместо выхода из мини-аппа.
+  tg.BackButton.onClick(()=>{
+    const overlay = document.getElementById('modal-overlay');
+    if(overlay && overlay.classList.contains('open')){
+      overlay.classList.remove('open');
+      tg.BackButton.hide();
+    }
+  });
+}
+
+// ============ Вспомогательные функции ============
+function wrapSvgLines(text, maxCharsPerLine){
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  words.forEach(w=>{
+    const test = line ? line + ' ' + w : w;
+    if(test.length > maxCharsPerLine && line){
+      lines.push(line);
+      line = w;
+    } else {
+      line = test;
+    }
+  });
+  if(line) lines.push(line);
+  return lines;
+}
+function nameCardSvg(name){
+  const lines = wrapSvgLines((name || '').trim(), 22);
+  const lineHeight = 30;
+  const startY = 180 - ((lines.length - 1) * lineHeight) / 2;
+  const tspans = lines.map((l,i)=> `<tspan x="240" y="${startY + i*lineHeight}">${escapeXml(l)}</tspan>`).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360">
+    <rect width="100%" height="100%" fill="#FFFFFF"/>
+    <rect x="0.5" y="0.5" width="479" height="359" fill="none" stroke="#EDE6D8" stroke-width="1"/>
+    <text font-size="24" font-family="Fraunces, Georgia, serif" font-weight="600" fill="#2A1E14" text-anchor="middle">${tspans}</text>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+function escapeXml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============ Иконки и разбор КБЖУ ============
+const KBJU_ICONS = {
+  b: '<svg viewBox="0 0 16 16" width="12" height="12"><ellipse cx="8" cy="8.3" rx="4.6" ry="6" fill="currentColor"/></svg>',
+  zh: '<svg viewBox="0 0 16 16" width="12" height="12"><path d="M8 1.3C8 1.3 3 8 3 10.8a5 5 0 0010 0C13 8 8 1.3 8 1.3z" fill="currentColor"/></svg>',
+  u: '<svg viewBox="0 0 16 16" width="12" height="12"><path d="M8 2.2c-2.2 0-3.6 2-3.6 4.3 0 1.7.9 2.7 1.8 3.5-.9.6-1.8 1.6-1.8 3.2h1.4c0-1.4 1-2.1 1.9-2.8.1 0 .2-.1.3-.1.1 0 .2.1.3.1.9.7 1.9 1.4 1.9 2.8h1.4c0-1.6-.9-2.6-1.8-3.2.9-.8 1.8-1.8 1.8-3.5 0-2.3-1.4-4.3-3.6-4.3z" fill="currentColor"/></svg>',
+  kcal: '<svg viewBox="0 0 16 16" width="12" height="12"><path d="M8.6 1.2c.6 2.4-1.6 3.3-1.6 5.6a1.5 1.5 0 003 0c0-.6-.4-1.1-.6-1.7 1.6.9 2.6 2.6 2.6 4.3a3.9 3.9 0 01-7.8 0c0-3.3 2.7-4.7 4.4-8.2z" fill="currentColor"/></svg>'
+};
+function parseKbju(raw){
+  if(!raw) return null;
+  const s = raw.replace(/\u00a0/g,' ').replace(/\n/g,' ');
+  const get = (letter) => {
+    const m = s.match(new RegExp(letter + '\\s*[:\\-]?\\s*(\\d+(?:[.,]\\d+)?)', 'i'));
+    return m ? m[1].replace(',', '.') : null;
+  };
+  const b = get('Б');
+  const zh = get('Ж');
+  const u = get('У');
+  let kcal = null;
+  const lower = s.toLowerCase();
+  const idx = lower.indexOf('ккал');
+  if(idx !== -1){
+    const after = s.slice(idx + 4).match(/^[\s:\-]*(\d+(?:[.,]\d+)?)/);
+    if(after){ kcal = after[1].replace(',', '.'); }
+    else {
+      const before = s.slice(0, idx).match(/(\d+(?:[.,]\d+)?)\s*$/);
+      if(before){ kcal = before[1].replace(',', '.'); }
+    }
+  }
+  if(!b && !zh && !u && !kcal) return null;
+  return {b, zh, u, kcal};
+}
+function kbjuPillsHtml(raw, pillClass){
+  const parsed = parseKbju(raw);
+  if(!parsed) return '';
+  const parts = [];
+  if(parsed.b)    parts.push(`<span class="${pillClass}">${KBJU_ICONS.b}Б ${parsed.b}</span>`);
+  if(parsed.zh)   parts.push(`<span class="${pillClass}">${KBJU_ICONS.zh}Ж ${parsed.zh}</span>`);
+  if(parsed.u)    parts.push(`<span class="${pillClass}">${KBJU_ICONS.u}У ${parsed.u}</span>`);
+  if(parsed.kcal) parts.push(`<span class="${pillClass}">${KBJU_ICONS.kcal}${parsed.kcal} ккал</span>`);
+  return parts.join('');
+}
+function imgUrlFor(item){
+  return nameCardSvg(item.name);
+}
+function fallbackSvg(name){
+  return nameCardSvg(name);
+}
+function setImgWithFallback(imgEl, item){
+  imgEl.onerror = function(){ imgEl.onerror = null; imgEl.src = fallbackSvg(item.name); };
+  loadCustomImage(item.id).then(custom => {
+    imgEl.src = custom || imgUrlFor(item);
+  });
+}
+async function loadCustomImage(id){
+  try{
+    return localStorage.getItem('custom-image-' + id);
+  }catch(e){ return null; }
+}
+async function saveCustomImage(id, dataUrl){
+  try{
+    localStorage.setItem('custom-image-' + id, dataUrl);
+    return true;
+  }catch(e){ console.error('Не удалось сохранить фото:', e); return false; }
+}
+
+// ---- Свои ответы на билеты экзамена (хранятся в этом же браузере) ----
+function loadCustomAnswer(id){
+  try{ return localStorage.getItem('custom-answer-' + id); }catch(e){ return null; }
+}
+function saveCustomAnswer(id, text){
+  try{ localStorage.setItem('custom-answer-' + id, text); return true; }
+  catch(e){ console.error('Не удалось сохранить ответ:', e); return false; }
+}
+function removeCustomAnswer(id){
+  try{ localStorage.removeItem('custom-answer-' + id); }catch(e){}
+}
+function nl2br(s){
+  return escapeXml(s || '').replace(/\n/g, '<br>');
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function pickRandom(arr, n, excludeIdx){
+  const pool = arr.filter((_,i)=> i!==excludeIdx);
+  return shuffle(pool).slice(0,n);
+}
+function pickN(arr, n){
+  return shuffle(arr).slice(0,n);
+}
+function pickDistractors(pool, correct, n, textKey){
+  const seen = new Set([textKey(correct)]);
+  const picked = [];
+  const tryAdd = (items) => {
+    for(const item of items){
+      if(picked.length === n) break;
+      const key = textKey(item);
+      if(seen.has(key)) continue;
+      seen.add(key);
+      picked.push(item);
+    }
+  };
+  const sameCat = shuffle(pool.filter(i => i.category === correct.category && i.id !== correct.id));
+  tryAdd(sameCat);
+  if(picked.length < n){
+    const rest = shuffle(pool.filter(i => i.id !== correct.id && !picked.includes(i)));
+    tryAdd(rest);
+  }
+  return picked;
+}
+
+// ============ Инициализация статистики ============
+document.getElementById('stat-menu').textContent = MENU_DATA.length;
+document.getElementById('stat-exam').textContent = EXAM_DATA.length;
+
+// ============ Вкладки ============
+const tabbtns = document.querySelectorAll('.tabbtn');
+const views = document.querySelectorAll('.view');
+tabbtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    haptic('light');
+    tabbtns.forEach(b=>b.classList.remove('active'));
+    views.forEach(v=>v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    if(btn.dataset.view === 'menuquiz') startMenuQuiz();
+    if(btn.dataset.view === 'examquiz') renderExamQuiz();
+  });
+});
+
+// ============ РАЗДЕЛ «МЕНЮ» ============
+const categories = [...new Set(MENU_DATA.map(i=>i.category))];
+let activeCategory = 'all';
+let searchTerm = '';
+
+const chipsEl = document.getElementById('menu-chips');
+function renderChips(){
+  chipsEl.innerHTML = '';
+  const allChip = document.createElement('button');
+  allChip.className = 'chip' + (activeCategory==='all' ? ' active' : '');
+  allChip.textContent = 'Все';
+  allChip.onclick = ()=>{ activeCategory='all'; renderChips(); renderMenu(); };
+  chipsEl.appendChild(allChip);
+  categories.forEach(cat=>{
+    const c = document.createElement('button');
+    c.className = 'chip' + (activeCategory===cat ? ' active' : '');
+    c.textContent = cat;
+    c.onclick = ()=>{ activeCategory=cat; renderChips(); renderMenu(); };
+    chipsEl.appendChild(c);
+  });
+}
+
+const gridEl = document.getElementById('menu-grid');
+const emptyEl = document.getElementById('menu-empty');
+function filteredMenu(){
+  return MENU_DATA.filter(item=>{
+    const matchCat = activeCategory==='all' || item.category === activeCategory;
+    const matchSearch = !searchTerm || item.name.toLowerCase().includes(searchTerm) || (item.composition||'').toLowerCase().includes(searchTerm);
+    return matchCat && matchSearch;
+  });
+}
+function renderMenu(){
+  const items = filteredMenu();
+  gridEl.innerHTML = '';
+  emptyEl.style.display = items.length ? 'none' : 'block';
+  items.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img class="card-img" alt="${item.name}">
+      <div class="card-body">
+        <div class="card-cat">${item.category}</div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-kbju">${kbjuPillsHtml(item.kbju, 'kbju-item')}</div>
+      </div>
+    `;
+    const imgEl = card.querySelector('.card-img');
+    setImgWithFallback(imgEl, item);
+    card.onclick = ()=> openModal(item);
+    gridEl.appendChild(card);
+  });
+}
+document.getElementById('menu-search').addEventListener('input', e=>{
+  searchTerm = e.target.value.trim().toLowerCase();
+  renderMenu();
+});
+
+// ============ Модальное окно ============
+const modalOverlay = document.getElementById('modal-overlay');
+let currentModalItem = null;
+function openModal(item){
+  currentModalItem = item;
+  document.getElementById('modal-cat').textContent = item.category + (item.subcategory ? ' · ' + item.subcategory : '');
+  document.getElementById('modal-name').textContent = item.name;
+  const kbjuHtml = kbjuPillsHtml(item.kbju, 'kbju-pill');
+  document.getElementById('modal-kbju').innerHTML = kbjuHtml;
+  document.getElementById('modal-kbju').style.display = kbjuHtml ? 'flex' : 'none';
+  document.getElementById('modal-comp').textContent = item.composition || '—';
+  const descWrap = document.getElementById('modal-desc-wrap');
+  if(item.description){
+    descWrap.style.display = '';
+    document.getElementById('modal-desc').textContent = item.description;
+  } else { descWrap.style.display = 'none'; }
+  const noteWrap = document.getElementById('modal-note-wrap');
+  if(item.note){
+    noteWrap.style.display = '';
+    document.getElementById('modal-note').textContent = '💡 ' + item.note;
+  } else { noteWrap.style.display = 'none'; }
+  setImgWithFallback(document.getElementById('modal-img'), item);
+  modalOverlay.classList.add('open');
+  if(tg){ tg.BackButton.show(); }
+}
+document.getElementById('modal-close').onclick = ()=>{ modalOverlay.classList.remove('open'); if(tg){ tg.BackButton.hide(); } };
+modalOverlay.addEventListener('click', e=>{ if(e.target===modalOverlay){ modalOverlay.classList.remove('open'); if(tg){ tg.BackButton.hide(); } } });
+
+document.getElementById('modal-replace').onclick = ()=> document.getElementById('modal-file-input').click();
+
+// Сжимаем фото перед сохранением: телефонные снимки весят по несколько мегабайт,
+// а у localStorage лимит порядка 5 МБ на всё приложение — без сжатия влезло бы 1-2 фото.
+function compressImageFile(file, maxDim, quality){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = ev => { img.src = ev.target.result; };
+    reader.onerror = reject;
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > height && width > maxDim){
+        height = Math.round(height * (maxDim / width));
+        width = maxDim;
+      } else if(height > maxDim){
+        width = Math.round(width * (maxDim / height));
+        height = maxDim;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('modal-file-input').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file || !currentModalItem) return;
+  compressImageFile(file, 480, 0.75).then(async dataUrl => {
+    const ok = await saveCustomImage(currentModalItem.id, dataUrl);
+    if(!ok){
+      alert('Не получилось сохранить фото — в хранилище браузера закончилось место. Попробуй удалить пару других фото в приложении или используй фото поменьше.');
+      return;
+    }
+    document.getElementById('modal-img').src = dataUrl;
+    renderMenu(); // заодно обновляем миниатюру в сетке меню
+  }).catch(()=>{
+    alert('Не получилось обработать это фото. Попробуй другое.');
+  });
+  e.target.value = ''; // чтобы можно было выбрать тот же файл повторно
+});
+
+// ============ ТЕСТ ПО МЕНЮ ============
+let mqMode = 'composition'; // composition: блюдо→состав. name: состав→блюдо. description: блюдо→описание. descName: описание→блюдо.
+let mqScore = 0, mqTotal = 0, mqStreak = 0;
+document.getElementById('mq-mode-a').onclick = ()=> setMqMode('composition');
+document.getElementById('mq-mode-b').onclick = ()=> setMqMode('name');
+document.getElementById('mq-mode-c').onclick = ()=> setMqMode('description');
+document.getElementById('mq-mode-d').onclick = ()=> setMqMode('descName');
+function setMqMode(mode){
+  mqMode = mode;
+  document.getElementById('mq-mode-a').classList.toggle('active', mode==='composition');
+  document.getElementById('mq-mode-b').classList.toggle('active', mode==='name');
+  document.getElementById('mq-mode-c').classList.toggle('active', mode==='description');
+  document.getElementById('mq-mode-d').classList.toggle('active', mode==='descName');
+  nextMenuQuestion();
+}
+function updateMqScore(){
+  document.getElementById('mq-score').textContent = `Счёт: ${mqScore} / ${mqTotal}`;
+  document.getElementById('mq-streak').textContent = mqStreak > 1 ? `🔥 ${mqStreak} подряд` : '';
+}
+function startMenuQuiz(){
+  if(!document.getElementById('mq-wrap').dataset.started){
+    document.getElementById('mq-wrap').dataset.started = '1';
+    nextMenuQuestion();
+  }
+}
+function truncate(s, n){ return s && s.length > n ? s.slice(0,n-1) + '…' : s; }
+
+const MQ_MODE_CONFIG = {
+  composition: { field: 'composition', direction: 'toField', prompt: (item)=> `${item.name} — какой у него состав?` },
+  name:        { field: 'composition', direction: 'toName',  prompt: (item)=> `Чей это состав: «${truncate(item.composition, 160)}»?` },
+  description: { field: 'description', direction: 'toField', prompt: (item)=> `${item.name} — как описать его гостю?` },
+  descName:    { field: 'description', direction: 'toName',  prompt: (item)=> `Про какое блюдо это описание для гостя: «${truncate(item.description, 160)}»?` },
+};
+
+function nextMenuQuestion(){
+  const wrap = document.getElementById('mq-wrap');
+  const config = MQ_MODE_CONFIG[mqMode];
+  const pool = MENU_DATA.filter(i => i[config.field]);
+  if(pool.length < 4){ wrap.innerHTML = '<div class="empty-quiz">Недостаточно данных для теста в этом режиме.</div>'; return; }
+  const idx = Math.floor(Math.random()*pool.length);
+  const correct = pool[idx];
+  const textKey = config.direction === 'toField' ? (i => i[config.field]) : (i => i.name);
+  const distractors = pickDistractors(pool, correct, 3, textKey);
+  const options = shuffle([correct, ...distractors]);
+
+  if(config.direction === 'toField'){
+    wrap.innerHTML = `
+      <div class="quiz-card">
+        <img class="quiz-img" id="qimg">
+        <div class="quiz-qbody">
+          <div class="card-cat" style="margin-bottom:6px;">${correct.category}</div>
+          <div class="quiz-question">${config.prompt(correct)}</div>
+          <div class="quiz-options" id="qopts"></div>
+          <button class="quiz-next" id="qnext">Дальше →</button>
+        </div>
+      </div>`;
+    setImgWithFallback(document.getElementById('qimg'), correct);
+    const optsEl = document.getElementById('qopts');
+    options.forEach(opt=>{
+      const b = document.createElement('button');
+      b.className = 'quiz-opt';
+      b.textContent = truncate(opt[config.field], 140);
+      b.onclick = ()=> answerMenuQuiz(b, opt.id === correct.id, optsEl);
+      optsEl.appendChild(b);
+    });
+  } else {
+    wrap.innerHTML = `
+      <div class="quiz-card">
+        <div class="quiz-qbody" style="padding-top:20px;">
+          <div class="card-cat" style="margin-bottom:6px;">${correct.category}</div>
+          <div class="quiz-question">${config.prompt(correct)}</div>
+          <div class="quiz-options" id="qopts"></div>
+          <button class="quiz-next" id="qnext">Дальше →</button>
+        </div>
+      </div>`;
+    const optsEl = document.getElementById('qopts');
+    options.forEach(opt=>{
+      const b = document.createElement('button');
+      b.className = 'quiz-opt';
+      b.textContent = opt.name;
+      b.onclick = ()=> answerMenuQuiz(b, opt.id === correct.id, optsEl);
+      optsEl.appendChild(b);
+    });
+  }
+  document.getElementById('qnext').onclick = nextMenuQuestion;
+}
+function answerMenuQuiz(btnEl, isCorrect, optsEl){
+  mqTotal++;
+  if(isCorrect){ mqScore++; mqStreak++; } else { mqStreak = 0; }
+  updateMqScore();
+  if(tg && tg.HapticFeedback){
+    try{ tg.HapticFeedback.notificationOccurred(isCorrect ? 'success' : 'error'); }catch(e){}
+  }
+  [...optsEl.children].forEach(c=>{
+    c.classList.add('disabled');
+  });
+  btnEl.classList.add(isCorrect ? 'correct' : 'wrong');
+  if(!isCorrect){
+    // при желании можно подсветить и правильный вариант, если он ещё не подсвечен
+  }
+  document.getElementById('qnext').classList.add('show');
+}
+
+// ============ РАЗДЕЛ «БИЛЕТЫ ЭКЗАМЕНА» ============
+const examSearchEl = document.getElementById('exam-search');
+let examSearch = '';
+examSearchEl.addEventListener('input', e=>{ examSearch = e.target.value.trim().toLowerCase(); renderExam(); });
+
+function renderExam(){
+  const groupsEl = document.getElementById('exam-groups');
+  groupsEl.innerHTML = '';
+  const cats = [...new Set(EXAM_DATA.map(i=>i.category))];
+  cats.forEach(cat=>{
+    const items = EXAM_DATA.filter(i=> i.category===cat && (!examSearch || i.q.toLowerCase().includes(examSearch) || i.a.toLowerCase().includes(examSearch)));
+    if(!items.length) return;
+    const groupEl = document.createElement('div');
+    groupEl.className = 'exam-group';
+    groupEl.innerHTML = `<div class="exam-group-title">${cat}</div>`;
+    items.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'exam-card';
+      const custom = loadCustomAnswer(item.id);
+      const hasCustom = custom !== null;
+      const answerText = hasCustom ? custom : item.a;
+      card.innerHTML = `
+        <div class="exam-q"><span>${item.q}</span><span class="exam-q-arrow">▸</span></div>
+        <div class="exam-a">
+          <div class="exam-a-text">${nl2br(answerText)}</div>
+          ${item.note ? `<div class="exam-note">💡 ${item.note}</div>` : ''}
+          <div class="exam-custom-badge" style="display:${hasCustom ? 'inline-flex' : 'none'};">✏️ Твой вариант ответа</div>
+          <div class="exam-edit-row">
+            <button class="exam-edit-btn" type="button">✏️ Свой ответ</button>
+            <button class="exam-revert-btn" type="button" style="display:${hasCustom ? 'inline-flex' : 'none'};">↺ Вернуть исходный</button>
+          </div>
+          <div class="exam-edit-form" style="display:none;">
+            <textarea class="exam-edit-textarea" placeholder="Впиши свой вариант ответа..."></textarea>
+            <div class="exam-edit-actions">
+              <button class="exam-save-btn" type="button">Сохранить</button>
+              <button class="exam-cancel-btn" type="button">Отмена</button>
+            </div>
+          </div>
+        </div>
+      `;
+      // клик по вопросу раскрывает/скрывает карточку; клики внутри ответа (кнопки, textarea)
+      // не должны на это влиять, поэтому вешаем обработчик именно на .exam-q, а не на всю карточку
+      card.querySelector('.exam-q').onclick = ()=> card.classList.toggle('open');
+
+      const textDiv = card.querySelector('.exam-a-text');
+      const badge = card.querySelector('.exam-custom-badge');
+      const editBtn = card.querySelector('.exam-edit-btn');
+      const revertBtn = card.querySelector('.exam-revert-btn');
+      const editRow = card.querySelector('.exam-edit-row');
+      const editForm = card.querySelector('.exam-edit-form');
+      const textarea = card.querySelector('.exam-edit-textarea');
+
+      editBtn.onclick = ()=>{
+        textarea.value = hasCustomNow() ? loadCustomAnswer(item.id) : item.a;
+        editForm.style.display = 'block';
+        editRow.style.display = 'none';
+        textDiv.style.display = 'none';
+        textarea.focus();
+      };
+      function hasCustomNow(){ return loadCustomAnswer(item.id) !== null; }
+
+      card.querySelector('.exam-cancel-btn').onclick = ()=>{
+        editForm.style.display = 'none';
+        editRow.style.display = 'flex';
+        textDiv.style.display = '';
+      };
+      card.querySelector('.exam-save-btn').onclick = ()=>{
+        const val = textarea.value.trim();
+        if(!val) return;
+        saveCustomAnswer(item.id, val);
+        textDiv.innerHTML = nl2br(val);
+        badge.style.display = 'inline-flex';
+        revertBtn.style.display = 'inline-flex';
+        editForm.style.display = 'none';
+        editRow.style.display = 'flex';
+        textDiv.style.display = '';
+      };
+      revertBtn.onclick = ()=>{
+        removeCustomAnswer(item.id);
+        textDiv.innerHTML = nl2br(item.a);
+        badge.style.display = 'none';
+        revertBtn.style.display = 'none';
+      };
+
+      groupEl.appendChild(card);
+    });
+    groupsEl.appendChild(groupEl);
+  });
+}
+renderExam();
+
+// ============ ТЕСТ ПО БИЛЕТАМ (самопроверка) ============
+let examProgress = {};
+async function loadExamProgress(){
+  try{
+    const raw = localStorage.getItem('exam-progress');
+    examProgress = raw ? JSON.parse(raw) : {};
+  }catch(e){ examProgress = {}; }
+}
+async function saveExamProgress(){
+  try{ localStorage.setItem('exam-progress', JSON.stringify(examProgress)); }catch(e){ console.error('Не удалось сохранить прогресс:', e); }
+}
+
+let eqCurrent = null;
+function pickNextExamQuestion(){
+  // вес: непройденным и отмеченным «повторить» вопросам достаётся больше шансов выпасть
+  const weighted = [];
+  EXAM_DATA.forEach(item=>{
+    const status = examProgress[item.id];
+    const weight = status === 'known' ? 1 : 4;
+    for(let i=0;i<weight;i++) weighted.push(item);
+  });
+  return weighted[Math.floor(Math.random()*weighted.length)];
+}
+function updateEqStats(){
+  const knownCount = EXAM_DATA.filter(i => examProgress[i.id]==='known').length;
+  document.getElementById('eq-stat').textContent = `Выучено: ${knownCount} / ${EXAM_DATA.length}`;
+  document.getElementById('eq-progress-fill').style.width = (knownCount / EXAM_DATA.length * 100) + '%';
+}
+async function renderExamQuiz(){
+  if(!Object.keys(examProgress).length){ await loadExamProgress(); }
+  updateEqStats();
+  eqCurrent = pickNextExamQuestion();
+  const wrap = document.getElementById('eq-wrap');
+  const eqCustom = loadCustomAnswer(eqCurrent.id);
+  const eqAnswerText = eqCustom !== null ? eqCustom : eqCurrent.a;
+  wrap.innerHTML = `
+    <div class="eq-card">
+      <div class="eq-cat">${eqCurrent.category}</div>
+      <div class="eq-q">${eqCurrent.q}</div>
+      <button class="eq-reveal-btn" id="eq-reveal">Показать ответ</button>
+      <div class="eq-answer" id="eq-answer">
+        ${nl2br(eqAnswerText)}
+        ${eqCustom !== null ? '<div class="exam-custom-badge" style="display:inline-flex; margin-top:10px;">✏️ Твой вариант ответа</div>' : ''}
+        ${eqCurrent.note ? `<div class="exam-note" style="margin-top:10px;">💡 ${eqCurrent.note}</div>` : ''}
+      </div>
+      <div class="eq-actions" id="eq-actions">
+        <button class="eq-btn review" id="eq-review">Повторить ещё</button>
+        <button class="eq-btn know" id="eq-know">Знаю ✓</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('eq-reveal').onclick = ()=>{
+    document.getElementById('eq-answer').classList.add('show');
+    document.getElementById('eq-actions').classList.add('show');
+    document.getElementById('eq-reveal').style.display = 'none';
+  };
+  document.getElementById('eq-know').onclick = async ()=>{
+    examProgress[eqCurrent.id] = 'known';
+    await saveExamProgress();
+    updateEqStats();
+    renderExamQuiz();
+  };
+  document.getElementById('eq-review').onclick = async ()=>{
+    examProgress[eqCurrent.id] = 'review';
+    await saveExamProgress();
+    updateEqStats();
+    renderExamQuiz();
+  };
+}
+document.getElementById('eq-reset').onclick = async ()=>{
+  examProgress = {};
+  await saveExamProgress();
+  updateEqStats();
+  renderExamQuiz();
+};
+
+// ============ Пасхалка ============
+(function(){
+  let clicks = 0;
+  let resetTimer = null;
+  const logo = document.getElementById('hero-logo');
+  const overlay = document.getElementById('easter-egg-overlay');
+  if(!logo || !overlay) return;
+  logo.style.cursor = 'pointer';
+  logo.addEventListener('click', ()=>{
+    clicks++;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(()=>{ clicks = 0; }, 1500);
+    if(clicks >= 5){
+      clicks = 0;
+      overlay.classList.add('show');
+      setTimeout(()=> overlay.classList.remove('show'), 1000);
+    }
+  });
+})();
+
+// ============ РАЗДЕЛ «СМЕНА» ============
+const SHIFT_DATA = [
+  {
+    id: 'open',
+    title: 'Открытие утренней смены',
+    intro: null,
+    items: [
+      'Снять верхнюю одежду и переодеться, помыть руки. Убрать волосы в пучок.',
+      'Включить кофемашину, печку на прогрев, кофемолку, кассу, свет в витринах, проверить термопот и включить его.',
+      'Включить кассу, открыть личную смену (с этого момента начинается отсчет времени смены). Открыть кассовую смену чтобы проверить работу оборудования.',
+      'Включить музыку (не очень громко 50-55%). Закрыть кабинет.',
+      'Вымыть руки, надеть перчатки, начать выкладку выпечки на противни. Выпечку заносим в акт приготовления.',
+      'Поставить выпечку в печь, следить визуально, время зависит от разных факторов. Ставим вариться кашу, проверяем топпинги к ней, если нету, идем в магазин.',
+      'Подготовить кофемашину к работе, промыть холдеры, протереть паровики, проварить по порции эспрессо в каждом рожке. Установить бункер и засыпать свежий кофе.',
+      'Настроить вкусный эспрессо, можно с рефрактометром. Сварить вкусный фильтр, попробовать и описать его, занести данные в бланк, активно предлагать гостям.',
+      'Выкладываем свежую выпечку (по планограмме), ее вносим в акт приготовления, ставим ценники (аккуратно, ровно). Выкладываем выпечку на скидку из холодильника, проверяем маркировку.',
+      'Выкладываем на витрину все, что осталось со вчерашнего дня (погреть в горячей печке). Всю выпечку ОБЯЗАТЕЛЬНО выкладывать по правилу ротации: более свежая ближе к гостю, вчерашняя ближе к вашей руке.',
+      'Проверяем наличие десертов и сроки годности, при необходимости ставим скидку и докладываем свежие. Все тарелки с десертами стоят ровно, аккуратно. Протираем витрину с десертами снаружи со всех сторон и витрину с выпечкой со стороны гостя.',
+      'Выходим из-за кассы и смотрим на витрину со стороны гостя: правильно ли расставлены ценники, чистое ли стекло. Сначала проверяем и исправляем, и только потом фото.',
+      'Проверяем все напитки, при необходимости докладываем. Проверяем апельсин, лимон, имбирь и все под сезонное меню, сроки годности. Проверяем топпинги к сырникам, наличие и сроки годности. Чтобы в холодильнике не было ничего старого.',
+      'Обязательно пересчитать кассу, проверить размен. О любых отклонениях (плюс или минус) пишем в группу. Проверить телефон под кассой.',
+      'В 7:50 выходим на улицу, проверяем зону скамеек и урны, если необходимо, убираем весь мусор в бак, подметаем. В 8:00 открываем ОБЕ створки первой двери и по погоде ОБЕ створки второй двери. Включаем вывеску и свет в коридоре. Делаем общее фото входа с зоной скамеек.',
+      'Выкатываем на улицу урну, если в ней нет мусорного пакета — обязательно его принести и хорошо закрепить в урне. Если на улице мусор, подметаем.',
+      'Протереть и дополнить кофестанцию, протереть столы, протереть стекла витрин и холодильник с напитками. Проверить туалет: чистый пол, сам унитаз и стульчак, есть полотенца, туалетная бумага, жидкое мыло, мусорный пакет, приятно пахнет.',
+      'Позаботиться о себе: доложить стаканы, крышки, принести молоко и все необходимое для комфортной работы.',
+      'Проверить чай, какао, горячий шоколад, матчу. Дополнить при необходимости.',
+    ],
+    outro: 'Работаем с хорошим настроением и дарим его гостям :)'
+  },
+  {
+    id: 'handover',
+    title: 'Передача и сдача смены',
+    intro: 'На смену приходим за 10 минут до ее начала. Пересменку начинаем тогда, когда приходит вторая смена. Принимаем и выдаем заказы, пока вас не сменят. Можно начать раньше, только если совсем нет гостей.',
+    items: [
+      'Пересчитать кассу (кассу считает тот, кто принимает смену), об отклонениях написать в группу (если в кассе минус, нужно его закрыть до передачи принимающему, вечерняя недостача делится между всеми). Проверить размен в кассе и под кассой (сказать управляющему). Отправить фото 41-отчета с экрана. Прибраться за кофемашиной, прочистить группы щеткой, хорошо промыть все тряпки или заменить, если старые. Протереть посуду и расставить на кофемашину. Передать информацию по кофе и настройкам второй смене. Проверить фильтр на остывание и вкус, если холодный — списать (летом можно перелить, убрать в холодильник и использовать на фильтр-тоник). Заварить свежий.',
+      'Посмотреть выпечку, допечь при необходимости, проверить десерты и доложить, убрать крошки, доложить воду и лимонады. Допечь — значит не только поставить в печь, но и выложить на витрину, и сделать фото витрин, когда все готово, отправить в группу.',
+      'Пополнить запасы молока, стаканов, крафтовой упаковки под выпечку и прочее. Проверить нарезку фруктов под сезонное меню, лед. Отписаться в группу, если чего-то мало.',
+      'Пополнить холодильник на складе, доложить молоко из коробок, сок, воду. Отписаться в группу, если чего-то мало.',
+      'Проверить туалет, доложить туалетную бумагу, полотенца, долить жидкое мыло. Поменять пакет с мусором, обязательно вынести его вместе со всем мусором. Залить в унитаз санокс и протереть унитаз, протереть пол. Туалет проверяем в любое время передачи или сдачи смены.',
+      'Протереть и дополнить кофестанцию, протереть столики, подмести зал, помыть, если очень грязно или что-то пролили.',
+      'Посмотреть мусор на улице, если урны полные, высыпать их в большой бак. Если и бак полный, необходимо откатить его на мусорку вместе с мусором из кофейни. Передать весь мусор дворникам, проконтролировать, чтобы все забрали и перевернули урны. Если дворников нет, выносим сами. Отправить фото улицы (в весенне-летний период).',
+      'Навести порядок в морозильных ларях, подписать все коробки и выбросить пустые. Расставить все по местам на складе.',
+      'Проверить чай, какао, горячий шоколад, матчу. Дополнить при необходимости. Убрать кашу в контейнер, помыть мультиварку.',
+      'Сдать смену принимающему кассиру, передать всю важную информацию (были какие-то заказы на вечер). Проверить возвраты, чеки и акты. Перечитать этот список еще раз.',
+      'Принимающая смена проверяет, все ли сделано, и отпускает утреннюю смену (для этого нужно прийти на смену минут на 10 раньше, чтобы точно знать, что нужно сделать).',
+      'Если в кофейне неожиданная запара, можно договориться между собой и попросить кого-то из утренней смены задержаться, чтобы помочь. За это всегда плюсик к карме)',
+    ],
+    outro: 'Бариста, как старший на смене, проверяет за кассиром, все ли сделано, и после этого отпускает со смены — или вместе закрывают смену и уходят домой.'
+  },
+  {
+    id: 'closing',
+    title: 'Закрытие смены',
+    intro: null,
+    items: [
+      'До 22:00 принимать заказы, после 22:01 только выдавать готовые заказы, закрыть входную дверь в кофейню и выключить вывеску. Если гости сидят в зале, предупредить о закрытии, дать им время спокойно собраться и уйти. В это время можно начать уборку за баром.',
+      'Помыть всю посуду, питчеры, стакан блендера, протереть и разложить по местам, чтобы не мешало под рукой. Слить коврики и протереть под ними.',
+      'Заполнить акты выпечки и убрать на скидку или на завтра. Проверить стойку со скидкой. Пергамент с витрины снять на противни для выпекания, на витрину положить новый.',
+      'Доложить десерты и вписать в акт, проверить сроки годности. Списать или поставить скидку. Протереть грязные полки, убрать крошки. Если обновляем десерт — помыть тарелку.',
+      'Навести порядок за баром, проверить и помыть подносы (должны быть без крошек и липких пятен). Пополнить нарезки, концентраты, чай. Донести со склада воду и соки. Пополнить кассовую зону (дрипы, батончики, печенье). Проверить и написать в группу, если заканчиваются фрукты на сезонку и кашу.',
+      'Уборка кофемашины: сверху чистая и сухая посуда, маленькие питчеры. Протереть всю стойку под кофемашиной, рядом с кофемолкой и термопотом. Прочищаем группы щеткой, химией, снимаем сетки и замачиваем на ночь. Промыть и замочить паровики, промыть поддон. На зарядку ставим чистые весы и капучинатор.',
+      'Зона у кофемашины и термопота чистая, без крошек и липких пятен. Пополнить какао, горячий шоколад, матчу. Выключить термопот. Проверить лед.',
+      'Пополнить холодильник под кофемашиной, на складе. Всю расходку на кофестанции и у кофемашины.',
+      'Тщательно протереть все столики, даже если на них нет крошек, со всех сторон. Стряхнуть крошки со стульев и скамеек, перевернуть стулья на столы. Протереть кофестанцию, стойку рядом и подоконники. Полить цветы, если необходимо.',
+      'Хорошо подмести полы в зале, на выходе между дверьми и на улице у бака, все коврики тоже. За баром, склад и туалет тоже подметаем.',
+      'Помыть пол в зале и в коридоре на выходе, чтобы хорошо помыть пол во всей кофейне, меняем воду 2-3 раза.',
+      'Уборка в туалете. В унитаз залить немного санокса и распылить раствор на бачок, стульчак со всех сторон и сам унитаз. Промыть унитаз ершиком, а бачок и стульчак тряпкой. Протереть раковину и зеркало. Проверить бумагу и полотенце, поменять мусорный пакет. Уже в самом конце помыть пол.',
+      'Собрать весь мусор и коробки с кофейни. Урны на улице перевернуть в бак, чтобы не испачкаться. Если бак полный, тоже отвезти на мусорку и поменять пакет. Завезти в кофейню.',
+      'Распечатать 41-отчет, изъять сумму наличных и после пересчитать кассу (должно быть 5000р), проверить размен (можно размениваться из выручки). Обо всех отклонениях пишем в группу, минус докладываем самостоятельно, плюс убираем вместе с наличкой. Сделать списания сотрудников и по сроку, распечатать 34-отчет.',
+      'Навести порядок на складе и морозилках, проверить лед и помыть пол. Убрать по местам всю химию, которую использовали для уборки, с плотно закрытыми крышками. Дверь на склад не закрываем.',
+      'Закрыть кассовую смену, проверить чеки возврата по Z-отчету (самый длинный). Чек инкассации и банковские слипы смотать в плотную трубочку и стянуть резинкой. Закрыть кассовый ящик, выключить кассу. Забрать все отчеты и выручку, аккуратно сложить в кабинет. Выключить музыку.',
+      'Помыть пол за баром, проверить все оборудование, свет и окна. Открыть посудомойку.',
+      'Бариста проверяет акты выпечки и десертов. Проверяет закрытие по списку. Если что-то забыли — доделываем.',
+      'Переодеваемся, выключаем свет, ставим на сигнал и закрываем обе двери. На улице делаем общее фото входа, чтобы было видно скамейки и урны. Пишем в группу, что закрылись.',
+    ],
+    outro: null
+  },
+  {
+    id: 'baking',
+    title: 'Правила выпекания',
+    intro: '<b>Первыми пекутся все сырники: 160 градусов — 14 минут.</b><br><br>После сырников, перед включением, подержать остальную выпечку в горячей печи 5–10 минут для расстойки.',
+    items: [
+      'Сладкие круассаны, кроме классических, можно выпекать вместе — время и температура одинаковые: 170 градусов 10 минут, переворачиваем, затем 160 градусов ещё примерно 10–15 минут.',
+      'Круассаны с крем-чиз — достаточно печь 10 минут.',
+      'Круассан с ветчиной, турноверы, ржаник — 170° 10 минут + 160° 15 минут.',
+      'Хачапури, улитки (улитки смазываем) — 170 градусов 25–30 минут.',
+      'Сочни и улитки удобнее всего печь на отдельном противне: 160–170 градусов 30–35 минут. Сочни выпекаем так, чтобы они растрескались сверху — пекутся дольше всех.',
+      'Классические круассаны: расстойка в горячей печи 10 минут, затем печь 170 градусов 10 минут + 160 градусов ещё 10 минут.',
+    ],
+    extraLists: [
+      {
+        heading: null,
+        intro: 'Выпечка хорошо пропекается и получается с румяной корочкой, если первые 10 минут ставить 170 градусов, а затем 12–15 минут — на 160 градусах.',
+        items: []
+      },
+      {
+        heading: 'Расстойка в печи',
+        intro: 'Ставим в печь питчер с горячей водой и греем до 160 градусов 10 минут. Ставим выпечку в горячую печь:',
+        items: [
+          'Классические круассаны — 10–15 минут.',
+          'Шведские и с маком — 20–25 минут (булочки после расстойки смазываем желтком, шведские посыпаем жемчужным сахаром).',
+          'Сосиски — 30–40 минут (после расстойки смазываем желтком).',
+        ]
+      },
+      {
+        heading: 'Выпекаем',
+        intro: null,
+        items: [
+          'Булочки — 10 минут при 170°, затем 5 минут при 150° (следить по виду, можно достать чуть раньше, чем сосиски).',
+          'Сосиски — 10 минут при 170°, затем 5 минут при 150°.',
+        ]
+      },
+      {
+        heading: 'Утром разводим смесь желтка для смазывания выпечки',
+        intro: null,
+        items: [
+          'В стакан наливаем 60 г тёплой воды, добавляем 20 г смеси (всё по весам). Хорошо перемешиваем кисточкой до растворения комочков (1–2 минуты).',
+          'Если нужно больше — 90 г воды на 30 г смеси.',
+        ]
+      }
+    ],
+    highlight: 'По вечерам протираем печь от жира и крошек!',
+    outro: null
+  }
+];
+
+function renderShift(){
+  const wrap = document.getElementById('shift-groups');
+  wrap.innerHTML = '';
+  SHIFT_DATA.forEach(section=>{
+    const el = document.createElement('div');
+    el.className = 'shift-section';
+    const extraHtml = (section.extraLists || []).map(block => `
+      <div class="shift-sublock">
+        ${block.heading ? `<div class="shift-subheading">${block.heading}</div>` : ''}
+        ${block.intro ? `<div class="shift-intro" style="margin-bottom:${block.items && block.items.length ? '10px' : '0'};">${block.intro}</div>` : ''}
+        ${block.items && block.items.length ? `<ol class="shift-list">${block.items.map(i=>`<li>${i}</li>`).join('')}</ol>` : ''}
+      </div>
+    `).join('');
+    el.innerHTML = `
+      <div class="shift-header">
+        <span class="shift-title">${section.title}</span>
+        <span class="shift-arrow">▸</span>
+      </div>
+      <div class="shift-body">
+        ${section.intro ? `<div class="shift-intro">${section.intro}</div>` : ''}
+        ${section.items && section.items.length ? `<ol class="shift-list">${section.items.map(item => `<li>${item}</li>`).join('')}</ol>` : ''}
+        ${extraHtml}
+        ${section.highlight ? `<div class="shift-highlight">✍️ ${section.highlight}</div>` : ''}
+        ${section.outro ? `<div class="shift-outro">${section.outro}</div>` : ''}
+      </div>
+    `;
+    el.querySelector('.shift-header').onclick = ()=> el.classList.toggle('open');
+    wrap.appendChild(el);
+  });
+}
+renderShift();
+
+// ============ Запуск ============
+renderChips();
+renderMenu();
+
+</script>
+</body>
+</html>
