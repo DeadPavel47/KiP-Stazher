@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F6EEDF">
 <title>Учи меню — шпаргалка кассира</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +31,22 @@
   --font-body: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
-html{ color-scheme: light; }
+html{ color-scheme: only light; }
+/* Некоторые мобильные браузеры/WebView (в частности в Android) агрессивно "затемняют"
+   светлые страницы алгоритмически, даже когда явно указано color-scheme: light.
+   Эти правила ниже переподтверждают исходные цвета при prefers-color-scheme: dark —
+   для многих таких движков само наличие явных правил для тёмной темы означает
+   "разработчик уже позаботился о теме", и они отключают автоматическую инверсию. */
+@media (prefers-color-scheme: dark){
+  body{ background: #F6EEDF !important; color: #2A1E14 !important; }
+  .modal{ background: #fff !important; }
+  .card{ background: #fff !important; }
+  .quiz-card{ background: #fff !important; }
+  .exam-card{ background: #fff !important; }
+  .eq-card{ background: #fff !important; }
+  .shift-section{ background: #fff !important; }
+  .modal-text, .card-name, .modal-name, .exam-a-text{ color: #2A1E14 !important; }
+}
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
