@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
 <title>Учи меню — шпаргалка кассира</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +30,7 @@
   --font-body: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
+html{ color-scheme: light; }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
@@ -886,24 +888,17 @@ if(tg){
   tg.ready();
   tg.expand();
 
-  // Подхватываем цветовую тему Telegram (тёмная/светлая), если она заметно отличается
-  // от нашей палитры — иначе оставляем фирменный вид приложения.
-  const applyTelegramTheme = () => {
-    const p = tg.themeParams || {};
-    const root = document.documentElement.style;
-    if(tg.colorScheme === 'dark'){
-      if(p.bg_color)             root.setProperty('--paper', p.bg_color);
-      if(p.secondary_bg_color)   root.setProperty('--paper-deep', p.secondary_bg_color);
-      if(p.text_color)           root.setProperty('--ink', p.text_color);
-      if(p.hint_color)           root.setProperty('--ink-soft', p.hint_color);
-    }
-    // Красим системную шапку/фон Telegram под цвет нашей тёмной плашки, чтобы не было
-    // белой полосы над приложением.
+  // Приложение спроектировано под свою фирменную светлую палитру (белые карточки,
+  // тёмная шапка) — намеренно НЕ переопределяем текстовые/фоновые цвета под тёмную
+  // тему Telegram, иначе текст на белых карточках может стать нечитаемым. Подстраиваем
+  // только внешнюю "рамку" Telegram (системную шапку и фон вокруг приложения), чтобы
+  // не было белой полосы сверху.
+  const applyTelegramChrome = () => {
     try{ tg.setHeaderColor('#21160F'); }catch(e){}
-    try{ tg.setBackgroundColor(tg.colorScheme === 'dark' ? '#21160F' : '#F6EEDF'); }catch(e){}
+    try{ tg.setBackgroundColor('#F6EEDF'); }catch(e){}
   };
-  applyTelegramTheme();
-  tg.onEvent('themeChanged', applyTelegramTheme);
+  applyTelegramChrome();
+  tg.onEvent('themeChanged', applyTelegramChrome);
 
   // Кнопка "назад" в шапке Telegram закрывает открытую карточку блюда вместо выхода из мини-аппа.
   tg.BackButton.onClick(()=>{
