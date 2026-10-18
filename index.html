@@ -771,83 +771,6 @@ body{
   color: var(--ink-soft);
 }
 
-/* ---------- Расписание ---------- */
-.sched-setup{
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 20px 22px 22px;
-  max-width: 560px;
-  margin: 0 auto;
-}
-.sched-setup-title{
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 19px;
-  margin-bottom: 10px;
-}
-.sched-setup-text{
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--ink-soft);
-  margin: 0 0 10px;
-}
-.sched-setup-steps{
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--ink);
-  margin: 0 0 14px;
-  padding-left: 20px;
-}
-.sched-setup-steps li{ margin-bottom: 4px; }
-.sched-setup-actions{ margin-top: 10px; }
-.sched-toolbar{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.sched-updated{
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-.sched-toolbar-actions{ display: flex; gap: 8px; }
-.sched-table-wrap{
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: auto;
-  max-width: 100%;
-}
-.sched-table{
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 13px;
-}
-.sched-table th{
-  background: var(--paper-deep);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-align: left;
-  padding: 10px 12px;
-  position: sticky;
-  top: 0;
-  white-space: nowrap;
-}
-.sched-table td{
-  padding: 9px 12px;
-  border-top: 1px solid var(--line);
-  white-space: nowrap;
-}
-.sched-table tr:first-child td{ border-top: none; }
-.sched-table tr:nth-child(even){ background: rgba(0,0,0,0.015); }
-
 footer.note{
   text-align: center;
   color: var(--ink-soft);
@@ -886,7 +809,6 @@ footer.note{
     <button class="tabbtn" data-view="exam">Билеты экзамена</button>
     <button class="tabbtn" data-view="examquiz">Тест по билетам</button>
     <button class="tabbtn" data-view="shift">Смена</button>
-    <button class="tabbtn" data-view="schedule">Расписание</button>
   </div>
 
   <!-- MENU VIEW -->
@@ -937,43 +859,6 @@ footer.note{
     <div id="shift-groups"></div>
   </div>
 
-  <!-- SCHEDULE VIEW -->
-  <div class="view" id="view-schedule">
-    <div class="sched-setup" id="sched-setup">
-      <div class="sched-setup-title">Подключить таблицу с расписанием</div>
-      <p class="sched-setup-text">
-        Начальник ведёт расписание в Google Таблице (это как Excel, но онлайн и бесплатно).
-        Приложение само подгружает оттуда свежие данные при каждом открытии — редактировать
-        сам файл не нужно.
-      </p>
-      <p class="sched-setup-text">
-        Как подключить (делает один раз тот, кто ведёт расписание):
-      </p>
-      <ol class="sched-setup-steps">
-        <li>Открыть таблицу в Google Sheets (можно импортировать существующий Excel-файл: «Файл → Импорт»).</li>
-        <li>«Файл → Общий доступ → Опубликовать в интернете».</li>
-        <li>Выбрать нужный лист и формат <b>«Значения, разделённые запятыми (.csv)»</b> → «Опубликовать».</li>
-        <li>Скопировать выданную ссылку и вставить её сюда:</li>
-      </ol>
-      <input class="search" id="sched-url-input" type="text" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv">
-      <div class="sched-setup-actions">
-        <button class="exam-save-btn" id="sched-url-save" type="button">Сохранить и загрузить</button>
-      </div>
-    </div>
-
-    <div id="sched-content" style="display:none;">
-      <div class="sched-toolbar">
-        <span class="sched-updated" id="sched-updated"></span>
-        <div class="sched-toolbar-actions">
-          <button class="replace-btn" id="sched-refresh" style="border-color:var(--ink-soft);color:var(--ink-soft);">↻ Обновить</button>
-          <button class="replace-btn" id="sched-change-url" style="border-color:var(--ink-soft);color:var(--ink-soft);">Изменить ссылку</button>
-        </div>
-      </div>
-      <div class="sched-table-wrap" id="sched-table-wrap"></div>
-    </div>
-
-    <div class="empty-quiz" id="sched-error" style="display:none;"></div>
-  </div>
 </div>
 
 <div class="easter-egg-overlay" id="easter-egg-overlay">
@@ -1215,10 +1100,6 @@ tabbtns.forEach(btn=>{
     document.getElementById('view-' + btn.dataset.view).classList.add('active');
     if(btn.dataset.view === 'menuquiz') startMenuQuiz();
     if(btn.dataset.view === 'examquiz') renderExamQuiz();
-    if(btn.dataset.view === 'schedule' && !document.getElementById('view-schedule').dataset.started){
-      document.getElementById('view-schedule').dataset.started = '1';
-      initScheduleView();
-    }
   });
 });
 
@@ -1803,140 +1684,6 @@ function renderShift(){
   });
 }
 renderShift();
-
-// ============ Расписание (из Google Таблицы) ============
-// Приложение — статичный файл без своего сервера, поэтому "живое обновление" сделано так:
-// начальник публикует Google Таблицу в CSV-формате (это даёт постоянную ссылку), а мы просто
-// подгружаем эту ссылку при каждом открытии вкладки. Никакого сервера или бэкенда не нужно.
-function loadScheduleUrl(){
-  try{ return localStorage.getItem('schedule-url'); }catch(e){ return null; }
-}
-function saveScheduleUrl(url){
-  try{ localStorage.setItem('schedule-url', url); return true; }catch(e){ return false; }
-}
-function loadScheduleCache(){
-  try{
-    const raw = localStorage.getItem('schedule-cache');
-    return raw ? JSON.parse(raw) : null;
-  }catch(e){ return null; }
-}
-function saveScheduleCache(rows, timestamp){
-  try{ localStorage.setItem('schedule-cache', JSON.stringify({ rows, timestamp })); }catch(e){}
-}
-
-// Простой, но надёжный разбор CSV: понимает кавычки, запятые и переносы строк внутри кавычек.
-function parseCsv(text){
-  const rows = [];
-  let row = [];
-  let field = '';
-  let inQuotes = false;
-  for(let i = 0; i < text.length; i++){
-    const c = text[i];
-    if(inQuotes){
-      if(c === '"'){
-        if(text[i+1] === '"'){ field += '"'; i++; }
-        else{ inQuotes = false; }
-      } else {
-        field += c;
-      }
-    } else {
-      if(c === '"'){ inQuotes = true; }
-      else if(c === ','){ row.push(field); field = ''; }
-      else if(c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
-      else if(c === '\r'){ /* пропускаем, перенос строки обработает \n */ }
-      else{ field += c; }
-    }
-  }
-  if(field.length || row.length){ row.push(field); rows.push(row); }
-  return rows.filter(r => r.some(cell => cell.trim() !== ''));
-}
-
-function renderScheduleTable(rows){
-  const wrap = document.getElementById('sched-table-wrap');
-  if(!rows || !rows.length){
-    wrap.innerHTML = '<div class="empty-quiz">Таблица пустая.</div>';
-    return;
-  }
-  const [header, ...body] = rows;
-  const thead = `<tr>${header.map(h => `<th>${escapeXml(h)}</th>`).join('')}</tr>`;
-  const tbody = body.map(r => `<tr>${r.map(c => `<td>${escapeXml(c)}</td>`).join('')}</tr>`).join('');
-  wrap.innerHTML = `<table class="sched-table"><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
-}
-
-function formatScheduleTimestamp(ts){
-  const d = new Date(ts);
-  const pad = n => String(n).padStart(2, '0');
-  return `${pad(d.getDate())}.${pad(d.getMonth()+1)} в ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-async function fetchSchedule(url, { silent } = {}){
-  const errorEl = document.getElementById('sched-error');
-  const contentEl = document.getElementById('sched-content');
-  if(!silent){ errorEl.style.display = 'none'; }
-  try{
-    const res = await fetch(url, { cache: 'no-store' });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    const rows = parseCsv(text);
-    if(!rows.length) throw new Error('empty');
-    const now = Date.now();
-    saveScheduleCache(rows, now);
-    renderScheduleTable(rows);
-    document.getElementById('sched-updated').textContent = 'Обновлено: ' + formatScheduleTimestamp(now);
-    contentEl.style.display = '';
-    errorEl.style.display = 'none';
-  }catch(e){
-    console.error('Не удалось загрузить расписание:', e);
-    const cache = loadScheduleCache();
-    if(cache){
-      renderScheduleTable(cache.rows);
-      document.getElementById('sched-updated').textContent = 'Не удалось обновить · показаны данные от ' + formatScheduleTimestamp(cache.timestamp);
-      contentEl.style.display = '';
-    } else {
-      contentEl.style.display = 'none';
-      errorEl.style.display = 'block';
-      errorEl.textContent = 'Не получилось загрузить расписание. Проверь ссылку (она должна быть опубликована как CSV) и подключение к интернету.';
-    }
-  }
-}
-
-function initScheduleView(){
-  const setupEl = document.getElementById('sched-setup');
-  const contentEl = document.getElementById('sched-content');
-  const savedUrl = loadScheduleUrl();
-  if(savedUrl){
-    setupEl.style.display = 'none';
-    contentEl.style.display = '';
-    const cache = loadScheduleCache();
-    if(cache){
-      renderScheduleTable(cache.rows);
-      document.getElementById('sched-updated').textContent = 'Обновлено: ' + formatScheduleTimestamp(cache.timestamp);
-    }
-    fetchSchedule(savedUrl, { silent: !!cache });
-  } else {
-    setupEl.style.display = '';
-    contentEl.style.display = 'none';
-  }
-}
-
-document.getElementById('sched-url-save').onclick = ()=>{
-  const url = document.getElementById('sched-url-input').value.trim();
-  if(!url) return;
-  saveScheduleUrl(url);
-  document.getElementById('sched-setup').style.display = 'none';
-  document.getElementById('sched-content').style.display = '';
-  fetchSchedule(url);
-};
-document.getElementById('sched-refresh').onclick = ()=>{
-  const url = loadScheduleUrl();
-  if(url) fetchSchedule(url);
-};
-document.getElementById('sched-change-url').onclick = ()=>{
-  document.getElementById('sched-url-input').value = loadScheduleUrl() || '';
-  document.getElementById('sched-setup').style.display = '';
-  document.getElementById('sched-content').style.display = 'none';
-};
-
 // ============ Запуск ============
 renderChips();
 renderMenu();
