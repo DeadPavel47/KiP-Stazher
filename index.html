@@ -54,7 +54,8 @@ html{ color-scheme: only light; }
   .eq-card{ background: #fff !important; }
   .shift-section{ background: #fff !important; }
   .modal-text, .card-name, .modal-name, .exam-a-text{ color: #1A2333 !important; }
-  .home-tile, .back-btn{ background: #fff !important; }
+  .home-tile, .back-btn, .profile-card, .staff-row{ background: #fff !important; }
+  .profile-name, .profile-card-title, .staff-name{ color: #1A2333 !important; }
   .home-tile-title, .sec-title{ color: #1A2333 !important; }
 }
 *{box-sizing:border-box;}
@@ -854,6 +855,143 @@ body{
   letter-spacing: -0.01em;
 }
 
+/* ---------- Профиль: вход, должность и ставка ---------- */
+.profile-card{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px 20px;
+  max-width: 560px;
+  margin: 0 auto 12px;
+}
+.profile-card-title{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+.profile-text{ font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+.field-label{
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 12px 0 6px;
+}
+.profile-card .search, .staff-form .search{ width: 100%; }
+.profile-error{
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: #F5DEDA;
+  border: 1px solid #E5B4AB;
+  color: #7A2E1A;
+  font-size: 13px;
+}
+.profile-ok{
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #E4EEDA;
+  color: #3F5326;
+  font-size: 13px;
+}
+.profile-name{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+.profile-row{
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14.5px;
+}
+.profile-row:first-of-type{ border-top: none; }
+.profile-label{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-top: 3px;
+}
+.profile-value{ font-weight: 600; text-align: right; }
+.staff-row{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.staff-top{ display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.staff-name{ font-weight: 600; font-size: 14.5px; }
+.staff-meta{ font-size: 12.5px; color: var(--ink-soft); margin-top: 3px; line-height: 1.45; }
+.staff-badge{
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--caramel-deep);
+  background: var(--paper-deep);
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.staff-form{ margin-top: 10px; display: none; }
+.staff-form select{
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+}
+.staff-actions{ display: flex; gap: 8px; margin-top: 12px; }
+
+/* ---------- Режим редактирования составов ---------- */
+.edit-banner{
+  background: #FBF1E0;
+  border: 1px solid #EAD3A0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 13.5px;
+  color: #6B4E1E;
+  line-height: 1.45;
+}
+.edit-banner-actions{ margin-top: 10px; }
+.card.editable{ outline: 2px dashed var(--caramel); outline-offset: -2px; }
+.card.editable .card-cat::after{ content: '  ✏️'; }
+.edit-modal{ position: relative; }
+.edit-modal .modal-body{ padding-top: 22px; }
+.edit-modal .modal-close{ top: 14px; right: 14px; }
+.edit-modal .search, .edit-modal .exam-edit-textarea{ width: 100%; }
+.edit-modal .exam-edit-textarea{ min-height: 70px; }
+.ef-delete{
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #C0402A;
+  background: #fff;
+  color: #C0402A;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.edit-toggle.on{ background: var(--board) !important; color: var(--chalk); border-color: var(--board); }
+
 footer.note{
   text-align: center;
   color: var(--ink-soft);
@@ -938,6 +1076,14 @@ footer.note{
         </span>
         <span class="home-tile-arrow">›</span>
       </button>
+      <button class="home-tile" data-go="profile" type="button">
+        <span class="home-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
+        <span class="home-tile-text">
+          <span class="home-tile-title" style="display:block;">Мой профиль</span>
+          <span class="home-tile-sub" style="display:block;">Вход, должность и ставка</span>
+        </span>
+        <span class="home-tile-arrow">›</span>
+      </button>
     </div>
   </section>
 
@@ -946,6 +1092,7 @@ footer.note{
     <div class="sec-head">
       <button class="back-btn" data-go="home" type="button">← На главную</button>
       <div class="sec-title">Составы</div>
+      <button class="back-btn edit-toggle" id="edit-toggle" type="button" style="display:none;margin-left:auto;">✏️ Редактировать</button>
     </div>
     <div class="tabbar">
       <button class="tabbtn active" data-view="menu-list" type="button">Меню</button>
@@ -953,6 +1100,12 @@ footer.note{
     </div>
 
     <div class="view active" id="view-menu-list">
+      <div class="edit-banner" id="edit-banner" style="display:none;">
+        <b>Режим редактирования.</b> Нажми на карточку, чтобы изменить её, или добавь новую позицию. Изменения сразу увидят все сотрудники.
+        <div class="edit-banner-actions">
+          <button class="exam-save-btn" id="add-item-btn" type="button">+ Добавить позицию</button>
+        </div>
+      </div>
       <div class="controls">
         <input class="search" id="menu-search" type="text" placeholder="Найти блюдо или напиток...">
       </div>
@@ -1018,6 +1171,87 @@ footer.note{
     <div class="view" id="view-barista-quiz"></div>
   </section>
 
+  <!-- МОЙ ПРОФИЛЬ -->
+  <section class="screen" id="screen-profile">
+    <div class="sec-head">
+      <button class="back-btn" data-go="home" type="button">← На главную</button>
+      <div class="sec-title">Мой профиль</div>
+    </div>
+
+    <div class="profile-card" id="profile-unconfigured" style="display:none;">
+      <div class="profile-card-title">Раздел пока не подключён</div>
+      <div class="profile-text">Вход сотрудников ещё не настроен. Когда администратор подключит базу данных, здесь появятся вход, должность и ставка.</div>
+    </div>
+
+    <div class="profile-card" id="profile-loading" style="display:none;">
+      <div class="profile-text">Загружаю…</div>
+    </div>
+
+    <div class="profile-card" id="login-card" style="display:none;">
+      <div class="profile-card-title">Вход</div>
+      <form id="login-form" autocomplete="on">
+        <label class="field-label" for="login-input">Логин</label>
+        <input class="search" id="login-input" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
+        <label class="field-label" for="password-input">Пароль</label>
+        <input class="search" id="password-input" name="password" type="password" autocomplete="current-password">
+        <div class="profile-error" id="login-error" style="display:none;"></div>
+        <div style="margin-top:16px;">
+          <button class="exam-save-btn" id="login-btn" type="submit">Войти</button>
+        </div>
+      </form>
+      <div class="profile-text" style="margin-top:14px;">Логин и пароль выдаёт администратор.</div>
+    </div>
+
+    <div id="profile-view" style="display:none;">
+      <div class="profile-card">
+        <div class="profile-name" id="pf-name"></div>
+        <div class="profile-row"><span class="profile-label">Должность</span><span class="profile-value" id="pf-position"></span></div>
+        <div class="profile-row"><span class="profile-label">Ставка</span><span class="profile-value" id="pf-rate"></span></div>
+        <div class="profile-row"><span class="profile-label">Доступ</span><span class="profile-value" id="pf-role"></span></div>
+        <button class="replace-btn" id="logout-btn" type="button" style="margin-top:14px;border-color:var(--ink-soft);color:var(--ink-soft);">Выйти</button>
+      </div>
+
+      <div id="admin-block" style="display:none;">
+        <div class="home-group-label">Сотрудники</div>
+        <div class="profile-text" style="max-width:560px;margin:0 auto 12px;">
+          Добавляй сотрудников, меняй имя, должность, ставку и права, сбрасывай пароль или удаляй аккаунт — всё прямо здесь.
+        </div>
+        <div class="staff-row" id="add-staff-card">
+          <button class="exam-save-btn" id="add-staff-open" type="button">+ Добавить сотрудника</button>
+          <div class="staff-form" id="add-staff-form">
+            <label class="field-label" for="ns-name">Имя *</label>
+            <input class="search" id="ns-name" type="text" autocomplete="off">
+            <label class="field-label" for="ns-login">Логин * (латиницей, например ivan)</label>
+            <input class="search" id="ns-login" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off">
+            <label class="field-label" for="ns-password">Пароль * (не короче 6 символов)</label>
+            <input class="search" id="ns-password" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="new-password">
+            <label class="field-label" for="ns-position">Должность</label>
+            <input class="search" id="ns-position" type="text">
+            <label class="field-label" for="ns-rate">Ставка</label>
+            <input class="search" id="ns-rate" type="text" placeholder="например: 250 ₽/час">
+            <label class="field-label" for="ns-role">Права</label>
+            <select id="ns-role">
+          <option value="employee">Сотрудник (видит только свой профиль)</option>
+          <option value="manager">Управляющий (редактирует составы)</option>
+          <option value="admin">Администратор (составы, сотрудники и ставки)</option>
+            </select>
+            <div id="ns-message"></div>
+            <div class="staff-actions">
+              <button class="exam-save-btn" id="ns-save" type="button">Создать</button>
+              <button class="exam-cancel-btn" id="ns-cancel" type="button">Отмена</button>
+            </div>
+          </div>
+        </div>
+        <div id="staff-list"></div>
+      </div>
+    </div>
+
+    <div class="profile-card" id="profile-error-card" style="display:none;">
+      <div class="profile-text" id="profile-error-text"></div>
+      <button class="replace-btn" id="profile-retry" type="button" style="margin-top:12px;">Повторить</button>
+    </div>
+  </section>
+
   <!-- СМЕНА -->
   <section class="screen" id="screen-shift">
     <div class="sec-head">
@@ -1062,6 +1296,39 @@ footer.note{
 
       <input type="file" id="modal-file-input" accept="image/*" style="display:none;">
       <button class="replace-btn" id="modal-replace">Заменить фото</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-overlay">
+  <div class="modal edit-modal">
+    <button class="modal-close" id="edit-close" type="button">✕</button>
+    <div class="modal-body">
+      <h2 class="modal-name" id="edit-title">Новая позиция</h2>
+      <label class="field-label" for="ef-name">Название *</label>
+      <input class="search" id="ef-name" type="text">
+      <label class="field-label" for="ef-category">Категория * (можно выбрать или вписать новую)</label>
+      <input class="search" id="ef-category" type="text" list="ef-category-list" autocomplete="off">
+      <datalist id="ef-category-list"></datalist>
+      <label class="field-label" for="ef-subcategory">Подкатегория</label>
+      <input class="search" id="ef-subcategory" type="text" list="ef-sub-list" autocomplete="off">
+      <datalist id="ef-sub-list"></datalist>
+      <label class="field-label" for="ef-kbju">КБЖУ</label>
+      <input class="search" id="ef-kbju" type="text" placeholder="например: Б-4,9; Ж-11; У-25; Ккал-220">
+      <label class="field-label" for="ef-composition">Состав</label>
+      <textarea class="exam-edit-textarea" id="ef-composition"></textarea>
+      <label class="field-label" for="ef-description">Описание для гостя</label>
+      <textarea class="exam-edit-textarea" id="ef-description"></textarea>
+      <label class="field-label" for="ef-method">Способ приготовления</label>
+      <textarea class="exam-edit-textarea" id="ef-method"></textarea>
+      <label class="field-label" for="ef-note">Примечание</label>
+      <textarea class="exam-edit-textarea" id="ef-note"></textarea>
+      <div id="ef-message"></div>
+      <div class="staff-actions">
+        <button class="exam-save-btn" id="ef-save" type="button">Сохранить</button>
+        <button class="exam-cancel-btn" id="ef-cancel" type="button">Отмена</button>
+        <button class="ef-delete" id="ef-delete" type="button">Удалить</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1298,6 +1565,7 @@ function showScreen(name){
   screens.forEach(s => s.classList.toggle('active', s.id === 'screen-' + name));
   window.scrollTo(0, 0);
   updateBackButton();
+  if(name === 'profile') profileOnShow();
 }
 document.querySelectorAll('[data-go]').forEach(el => {
   el.addEventListener('click', () => showScreen(el.dataset.go));
@@ -1325,7 +1593,7 @@ document.querySelectorAll('.tabbar').forEach(bar => {
 });
 
 // ============ РАЗДЕЛ «МЕНЮ» ============
-const categories = [...new Set(MENU_DATA.map(i=>i.category))];
+let categories = [...new Set(MENU_DATA.map(i=>i.category))];
 let activeCategory = 'all';
 let searchTerm = '';
 
@@ -1363,16 +1631,17 @@ function renderMenu(){
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <img class="card-img" alt="${item.name}">
+      <img class="card-img" alt="${escapeXml(item.name)}">
       <div class="card-body">
-        <div class="card-cat">${item.category}</div>
-        <div class="card-name">${item.name}</div>
+        <div class="card-cat">${escapeXml(item.category)}</div>
+        <div class="card-name">${escapeXml(item.name)}</div>
         <div class="card-kbju">${kbjuPillsHtml(item.kbju, 'kbju-item')}</div>
       </div>
     `;
     const imgEl = card.querySelector('.card-img');
     setImgWithFallback(imgEl, item);
-    card.onclick = ()=> openModal(item);
+    if(editMode) card.classList.add('editable');
+    card.onclick = ()=> editMode ? openEditor(item) : openModal(item);
     gridEl.appendChild(card);
   });
 }
@@ -1425,12 +1694,13 @@ modalOverlay.addEventListener('click', e=>{ if(e.target===modalOverlay) closeMod
 // Системная кнопка «назад» Telegram: видна, пока открыта карточка блюда или мы не на главном экране.
 function updateBackButton(){
   if(!tg) return;
-  const modalOpen = modalOverlay.classList.contains('open');
+  const modalOpen = modalOverlay.classList.contains('open') || editOverlayOpen();
   try{
     if(modalOpen || currentScreen !== 'home') tg.BackButton.show(); else tg.BackButton.hide();
   }catch(e){}
 }
 function handleTelegramBack(){
+  if(editOverlayOpen()){ closeEditor(); return; }
   if(modalOverlay.classList.contains('open')){ closeModal(); return; }
   if(currentScreen !== 'home') showScreen('home');
 }
@@ -1513,10 +1783,10 @@ function startMenuQuiz(){
 function truncate(s, n){ return s && s.length > n ? s.slice(0,n-1) + '…' : s; }
 
 const MQ_MODE_CONFIG = {
-  composition: { field: 'composition', direction: 'toField', prompt: (item)=> `${item.name} — какой у него состав?` },
-  name:        { field: 'composition', direction: 'toName',  prompt: (item)=> `Чей это состав: «${truncate(item.composition, 160)}»?` },
-  description: { field: 'description', direction: 'toField', prompt: (item)=> `${item.name} — как описать его гостю?` },
-  descName:    { field: 'description', direction: 'toName',  prompt: (item)=> `Про какое блюдо это описание для гостя: «${truncate(item.description, 160)}»?` },
+  composition: { field: 'composition', direction: 'toField', prompt: (item)=> `${escapeXml(item.name)} — какой у него состав?` },
+  name:        { field: 'composition', direction: 'toName',  prompt: (item)=> `Чей это состав: «${escapeXml(truncate(item.composition, 160))}»?` },
+  description: { field: 'description', direction: 'toField', prompt: (item)=> `${escapeXml(item.name)} — как описать его гостю?` },
+  descName:    { field: 'description', direction: 'toName',  prompt: (item)=> `Про какое блюдо это описание для гостя: «${escapeXml(truncate(item.description, 160))}»?` },
 };
 
 function nextMenuQuestion(){
@@ -1535,7 +1805,7 @@ function nextMenuQuestion(){
       <div class="quiz-card">
         <img class="quiz-img" id="qimg">
         <div class="quiz-qbody">
-          <div class="card-cat" style="margin-bottom:6px;">${correct.category}</div>
+          <div class="card-cat" style="margin-bottom:6px;">${escapeXml(correct.category)}</div>
           <div class="quiz-question">${config.prompt(correct)}</div>
           <div class="quiz-options" id="qopts"></div>
           <button class="quiz-next" id="qnext">Дальше →</button>
@@ -1554,7 +1824,7 @@ function nextMenuQuestion(){
     wrap.innerHTML = `
       <div class="quiz-card">
         <div class="quiz-qbody" style="padding-top:20px;">
-          <div class="card-cat" style="margin-bottom:6px;">${correct.category}</div>
+          <div class="card-cat" style="margin-bottom:6px;">${escapeXml(correct.category)}</div>
           <div class="quiz-question">${config.prompt(correct)}</div>
           <div class="quiz-options" id="qopts"></div>
           <button class="quiz-next" id="qnext">Дальше →</button>
@@ -1792,6 +2062,583 @@ const examModules = {
   }),
 };
 
+// ============ ПРОФИЛЬ: вход, должность и ставка (Supabase, только логин и пароль) ============
+// Подключение: вставь сюда адрес проекта и ПУБЛИЧНЫЙ ключ (anon / publishable) из Supabase → Project Settings → API.
+// Секретный ключ (service_role / secret) сюда вставлять нельзя ни при каких условиях.
+const SUPABASE_URL = 'https://vfpeshgsmeqsfckfrmqe.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_swFPgd__2L1tenrndUKRAg_60upKTKk';   // публичный ключ (его можно держать в коде)
+// Сотрудник вводит просто логин (например «ivan»), а в Supabase аккаунт хранится как «ivan@kip.example.com».
+const LOGIN_DOMAIN = 'kip.example.com';
+const SESSION_KEY = 'kip-session';
+
+function sbReady(){ return !!(SUPABASE_URL && SUPABASE_KEY); }
+function loadSession(){ try{ return JSON.parse(localStorage.getItem(SESSION_KEY)); }catch(e){ return null; } }
+function saveSession(s){ try{ localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }catch(e){} }
+function clearSession(){ try{ localStorage.removeItem(SESSION_KEY); }catch(e){} }
+
+async function authRequest(grant, body){
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=${grant}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok){
+    const err = new Error(data.error_description || data.msg || ('HTTP ' + res.status));
+    err.status = res.status;
+    throw err;
+  }
+  return { access_token: data.access_token, refresh_token: data.refresh_token, user_id: data.user && data.user.id };
+}
+
+// запрос к базе от имени вошедшего сотрудника; при просроченном токене один раз обновляет сессию
+async function sbApi(path, options, canRetry){
+  if(canRetry === undefined) canRetry = true;
+  options = options || {};
+  const s = loadSession();
+  if(!s) throw new Error('no-session');
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method: options.method || 'GET',
+    body: options.body,
+    headers: Object.assign({
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + s.access_token,
+      'Content-Type': 'application/json',
+    }, options.headers || {}),
+  });
+  if(res.status === 401 && canRetry){
+    try{
+      const fresh = await authRequest('refresh_token', { refresh_token: s.refresh_token });
+      saveSession(Object.assign({}, s, fresh));
+    }catch(e){
+      clearSession();
+      throw new Error('session-expired');
+    }
+    return sbApi(path, options, false);
+  }
+  if(!res.ok){
+    const text = await res.text();
+    if(res.status === 403) throw new Error('forbidden');
+    throw new Error(text || ('HTTP ' + res.status));
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+const pfEls = {
+  unconfigured: document.getElementById('profile-unconfigured'),
+  loading: document.getElementById('profile-loading'),
+  login: document.getElementById('login-card'),
+  view: document.getElementById('profile-view'),
+  error: document.getElementById('profile-error-card'),
+};
+function pfShow(which){
+  Object.keys(pfEls).forEach(k => { pfEls[k].style.display = (k === which) ? '' : 'none'; });
+}
+function pfShowError(message){
+  document.getElementById('profile-error-text').textContent = message;
+  pfShow('error');
+}
+
+async function profileOnShow(){
+  if(!sbReady()){ pfShow('unconfigured'); return; }
+  if(!loadSession()){ pfShow('login'); return; }
+  await loadMyProfile();
+}
+
+async function loadMyProfile(){
+  pfShow('loading');
+  try{
+    const s = loadSession();
+    const rows = await sbApi(`profiles?select=*&id=eq.${encodeURIComponent(s.user_id)}`);
+    const me = rows && rows[0];
+    if(!me){
+      pfShowError('Профиль ещё не создан. Обратись к администратору.');
+      return;
+    }
+    document.getElementById('pf-name').textContent = me.full_name || '—';
+    document.getElementById('pf-position').textContent = me.position || 'не указана';
+    document.getElementById('pf-rate').textContent = me.rate || 'не указана';
+    document.getElementById('pf-role').textContent = ROLE_LABELS[me.role] || 'Сотрудник';
+    setProfile(me);
+    const adminBlock = document.getElementById('admin-block');
+    pfShow('view');
+    if(me.role === 'admin'){
+      adminBlock.style.display = '';
+      await loadStaff(me);
+    } else {
+      adminBlock.style.display = 'none';
+    }
+  }catch(e){
+    if(e.message === 'session-expired' || e.message === 'no-session'){
+      setProfile(null);
+      document.getElementById('login-error').style.display = 'none';
+      pfShow('login');
+    } else {
+      pfShowError('Не получилось загрузить профиль. Проверь интернет и попробуй ещё раз.');
+    }
+  }
+}
+
+async function loadStaff(me){
+  const list = document.getElementById('staff-list');
+  list.innerHTML = '<div class="profile-text" style="text-align:center;">Загружаю список…</div>';
+  try{
+    const rows = await sbApi('profiles?select=*&order=full_name.asc');
+    renderStaff(rows || [], me);
+  }catch(e){
+    list.innerHTML = '<div class="profile-error" style="max-width:560px;margin:0 auto;">Не получилось загрузить список сотрудников.</div>';
+  }
+}
+
+function renderStaff(rows, me){
+  const list = document.getElementById('staff-list');
+  list.innerHTML = '';
+  rows.forEach(row => {
+    const isMe = row.id === me.id;
+    const el = document.createElement('div');
+    el.className = 'staff-row';
+    const roleBadge = (row.role === 'admin' ? '<span class="staff-badge">админ</span>' : row.role === 'manager' ? '<span class="staff-badge">управляющий</span>' : '');
+    el.innerHTML = `
+      <div class="staff-top">
+        <div>
+          <div class="staff-name">${escapeXml(row.full_name || '—')}${roleBadge}${isMe ? '<span class="staff-badge">это ты</span>' : ''}</div>
+          <div class="staff-meta">${escapeXml(row.position || 'должность не указана')} · ${escapeXml(row.rate || 'ставка не указана')}</div>
+          <div class="staff-meta">логин: ${escapeXml(row.login || '—')}</div>
+        </div>
+        <button class="replace-btn staff-edit-btn" type="button" style="margin-top:0;">Изменить</button>
+      </div>
+      <div class="staff-form">
+        <label class="field-label">Имя</label>
+        <input class="search sf-name" type="text">
+        <label class="field-label">Должность</label>
+        <input class="search sf-position" type="text">
+        <label class="field-label">Ставка</label>
+        <input class="search sf-rate" type="text" placeholder="например: 250 ₽/час">
+        <label class="field-label">Права</label>
+        <select class="sf-role">
+          <option value="employee">Сотрудник (видит только свой профиль)</option>
+          <option value="manager">Управляющий (редактирует составы)</option>
+          <option value="admin">Администратор (составы, сотрудники и ставки)</option>
+        </select>
+        <label class="field-label">Новый пароль</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input class="search sf-password" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="new-password" placeholder="не короче 6 символов" style="flex:1;min-width:0;">
+          <button class="replace-btn sf-setpass" type="button" style="margin-top:0;white-space:nowrap;">Сменить</button>
+        </div>
+        <div class="sf-message"></div>
+        <div class="staff-actions">
+          <button class="exam-save-btn sf-save" type="button">Сохранить</button>
+          <button class="exam-cancel-btn sf-cancel" type="button">Отмена</button>
+          <button class="ef-delete sf-delete" type="button">Удалить</button>
+        </div>
+      </div>`;
+    const form = el.querySelector('.staff-form');
+    const nameIn = el.querySelector('.sf-name');
+    const posIn = el.querySelector('.sf-position');
+    const rateIn = el.querySelector('.sf-rate');
+    const roleIn = el.querySelector('.sf-role');
+    const msg = el.querySelector('.sf-message');
+    const meta = el.querySelector('.staff-meta');
+    const nameEl = el.querySelector('.staff-name');
+
+    el.querySelector('.staff-edit-btn').onclick = () => {
+      nameIn.value = row.full_name || '';
+      posIn.value = row.position || '';
+      rateIn.value = row.rate || '';
+      roleIn.value = row.role;
+      // себе права менять нельзя — чтобы случайно не остаться без администратора
+      roleIn.disabled = isMe;
+      msg.innerHTML = isMe ? '<div class="profile-text" style="margin-top:8px;">Свои права менять нельзя, чтобы не остаться без администратора.</div>' : '';
+      form.style.display = 'block';
+    };
+    el.querySelector('.sf-cancel').onclick = () => { form.style.display = 'none'; };
+    // себя удалить нельзя — иначе можно остаться без администратора
+    el.querySelector('.sf-delete').style.display = isMe ? 'none' : '';
+    el.querySelector('.sf-setpass').onclick = async () => {
+      const passIn = el.querySelector('.sf-password');
+      const pass = passIn.value;
+      if(pass.length < 6){ msg.innerHTML = '<div class="profile-error">Пароль должен быть не короче 6 символов.</div>'; return; }
+      try{
+        await adminUsers({ action: 'set_password', user_id: row.id, password: pass });
+        passIn.value = '';
+        msg.innerHTML = '<div class="profile-ok">Пароль изменён. Передай его сотруднику.</div>';
+      }catch(e){ msg.innerHTML = `<div class="profile-error">${adminErrorText(e)}</div>`; }
+    };
+    el.querySelector('.sf-delete').onclick = async () => {
+      if(!confirm(`Удалить сотрудника «${row.full_name || row.login || ''}»? Он больше не сможет войти, его профиль и ставка удалятся.`)) return;
+      try{
+        await adminUsers({ action: 'delete', user_id: row.id });
+        el.remove();
+      }catch(e){ msg.innerHTML = `<div class="profile-error">${adminErrorText(e)}</div>`; }
+    };
+    el.querySelector('.sf-save').onclick = async () => {
+      const fullName = nameIn.value.trim();
+      if(!fullName){ msg.innerHTML = '<div class="profile-error">Имя не может быть пустым.</div>'; return; }
+      const patch = { full_name: fullName, position: posIn.value.trim() || null, rate: rateIn.value.trim() || null };
+      if(!isMe) patch.role = roleIn.value;
+      try{
+        const updated = await sbApi('profiles?id=eq.' + encodeURIComponent(row.id), {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=representation' },
+          body: JSON.stringify(patch),
+        });
+        if(!updated || !updated.length) throw new Error('not-saved');
+        Object.assign(row, updated[0]);
+        nameEl.innerHTML = `${escapeXml(row.full_name || '—')}${(row.role === 'admin' ? '<span class="staff-badge">админ</span>' : row.role === 'manager' ? '<span class="staff-badge">управляющий</span>' : '')}${isMe ? '<span class="staff-badge">это ты</span>' : ''}`;
+        meta.textContent = `${row.position || 'должность не указана'} · ${row.rate || 'ставка не указана'}`;
+        if(isMe){
+          document.getElementById('pf-name').textContent = row.full_name || '—';
+          document.getElementById('pf-position').textContent = row.position || 'не указана';
+          document.getElementById('pf-rate').textContent = row.rate || 'не указана';
+        }
+        form.style.display = 'none';
+      }catch(e){
+        msg.innerHTML = '<div class="profile-error">Не удалось сохранить. Проверь интернет и права доступа.</div>';
+      }
+    };
+    list.appendChild(el);
+  });
+}
+
+// ---------- управление аккаунтами сотрудников (через серверную функцию admin-users) ----------
+// Создавать аккаунты и менять пароли может только сервер с секретным ключом. Он живёт внутри
+// Supabase (функция admin-users) и сам проверяет, что запрос пришёл от администратора.
+async function adminUsers(payload, canRetry){
+  if(canRetry === undefined) canRetry = true;
+  const s = loadSession();
+  if(!s) throw new Error('no-session');
+  let res;
+  try{
+    res = await fetch(`${SUPABASE_URL}/functions/v1/admin-users`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + s.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  }catch(e){ throw new Error('network'); }
+  const data = await res.json().catch(() => ({}));
+  if(res.status === 401 && canRetry){
+    try{
+      const fresh = await authRequest('refresh_token', { refresh_token: s.refresh_token });
+      saveSession(Object.assign({}, s, fresh));
+    }catch(e){ clearSession(); throw new Error('session-expired'); }
+    return adminUsers(payload, false);
+  }
+  if(!res.ok || !data.ok) throw new Error(data.error || ('HTTP ' + res.status));
+  return data;
+}
+function adminErrorText(e){
+  const code = String(e && e.message || '');
+  const texts = {
+    'login_taken': 'Такой логин уже занят — придумай другой.',
+    'bad_login': 'Логин: латинские буквы, цифры, точка, дефис или подчёркивание, от 2 до 32 символов.',
+    'short_password': 'Пароль должен быть не короче 6 символов.',
+    'weak_password': 'Пароль слишком простой — сделай его длиннее.',
+    'no_name': 'Укажи имя сотрудника.',
+    'not_admin': 'Это может делать только администратор.',
+    'cannot_delete_self': 'Себя удалить нельзя.',
+    'session-expired': 'Сессия закончилась — выйди и войди заново.',
+    'no-session': 'Сессия закончилась — выйди и войди заново.',
+    'not_signed_in': 'Сессия закончилась — выйди и войди заново.',
+    'network': 'Нет связи с сервером. Проверь интернет.',
+  };
+  return texts[code] || 'Не получилось. Попробуй ещё раз чуть позже.';
+}
+
+const NS = {
+  form: document.getElementById('add-staff-form'),
+  name: document.getElementById('ns-name'),
+  login: document.getElementById('ns-login'),
+  password: document.getElementById('ns-password'),
+  position: document.getElementById('ns-position'),
+  rate: document.getElementById('ns-rate'),
+  role: document.getElementById('ns-role'),
+  msg: document.getElementById('ns-message'),
+};
+document.getElementById('add-staff-open').onclick = () => {
+  ['name', 'login', 'password', 'position', 'rate'].forEach(k => { NS[k].value = ''; });
+  NS.role.value = 'employee';
+  NS.msg.innerHTML = '';
+  NS.form.style.display = 'block';
+  document.getElementById('add-staff-open').style.display = 'none';
+  NS.name.focus();
+};
+document.getElementById('ns-cancel').onclick = () => {
+  NS.form.style.display = 'none';
+  document.getElementById('add-staff-open').style.display = '';
+};
+document.getElementById('ns-save').onclick = async () => {
+  const fullName = NS.name.value.trim();
+  const login = NS.login.value.trim().toLowerCase();
+  const password = NS.password.value;
+  if(!fullName){ NS.msg.innerHTML = '<div class="profile-error">Укажи имя сотрудника.</div>'; return; }
+  if(!/^[a-z0-9][a-z0-9._-]{1,31}$/.test(login)){ NS.msg.innerHTML = '<div class="profile-error">Логин: латинские буквы, цифры, точка, дефис или подчёркивание, от 2 до 32 символов.</div>'; return; }
+  if(password.length < 6){ NS.msg.innerHTML = '<div class="profile-error">Пароль должен быть не короче 6 символов.</div>'; return; }
+  const btn = document.getElementById('ns-save');
+  btn.disabled = true;
+  btn.textContent = 'Создаю…';
+  try{
+    await adminUsers({
+      action: 'create', full_name: fullName, login, password,
+      position: NS.position.value.trim(), rate: NS.rate.value.trim(), role: NS.role.value,
+    });
+    NS.form.style.display = 'none';
+    document.getElementById('add-staff-open').style.display = '';
+    await loadStaff(currentProfile);
+    const note = document.createElement('div');
+    note.className = 'profile-ok';
+    note.style.maxWidth = '560px';
+    note.style.margin = '0 auto 10px';
+    note.textContent = `Готово. Сотрудник входит с логином «${login}» и паролем, который ты задал.`;
+    const list = document.getElementById('staff-list');
+    list.insertBefore(note, list.firstChild);
+  }catch(e){
+    NS.msg.innerHTML = `<div class="profile-error">${adminErrorText(e)}</div>`;
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Создать';
+  }
+};
+
+document.getElementById('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  const rawLogin = document.getElementById('login-input').value.trim();
+  const password = document.getElementById('password-input').value;
+  errEl.style.display = 'none';
+  if(!rawLogin || !password){
+    errEl.textContent = 'Введи логин и пароль.';
+    errEl.style.display = 'block';
+    return;
+  }
+  const email = (rawLogin.indexOf('@') !== -1 ? rawLogin : rawLogin + '@' + LOGIN_DOMAIN).toLowerCase();
+  btn.disabled = true;
+  btn.textContent = 'Входим…';
+  try{
+    const session = await authRequest('password', { email, password });
+    saveSession(session);
+    document.getElementById('password-input').value = '';
+    await loadMyProfile();
+  }catch(err){
+    errEl.textContent = (err.status === 400 || err.status === 401)
+      ? 'Неверный логин или пароль.'
+      : 'Не получилось войти. Проверь интернет и попробуй ещё раз.';
+    errEl.style.display = 'block';
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Войти';
+  }
+});
+
+document.getElementById('logout-btn').onclick = () => {
+  clearSession();
+  setProfile(null);
+  document.getElementById('staff-list').innerHTML = '';
+  document.getElementById('add-staff-form').style.display = 'none';
+  document.getElementById('add-staff-open').style.display = '';
+  document.getElementById('login-input').value = '';
+  pfShow('login');
+};
+document.getElementById('profile-retry').onclick = () => profileOnShow();
+
+// ============ РЕДАКТИРОВАНИЕ СОСТАВОВ (управляющий и администратор) ============
+// Составы хранятся в базе (таблица menu_items). Все видят то, что там лежит; менять могут только
+// управляющий и администратор — это проверяет сама база, а не только интерфейс.
+// Пока база не подключена или недоступна, показываются составы, встроенные в этот файл.
+const ROLE_LABELS = {
+  employee: 'Сотрудник',
+  manager: 'Управляющий — редактирует составы',
+  admin: 'Администратор — составы, сотрудники и ставки',
+};
+const MENU_CACHE_KEY = 'menu-cache-v1';
+let currentProfile = null;
+let editMode = false;
+let menuFromDb = false;   // редактировать можно только когда составы загружены из базы
+
+function canEditContent(){
+  return !!(currentProfile && (currentProfile.role === 'admin' || currentProfile.role === 'manager'));
+}
+function setProfile(p){
+  currentProfile = p;
+  document.getElementById('edit-toggle').style.display = canEditContent() ? '' : 'none';
+  if(!canEditContent() && editMode) setEditMode(false);
+}
+async function initRole(){
+  if(!sbReady() || !loadSession()){ setProfile(null); return; }
+  try{
+    const s = loadSession();
+    const rows = await sbApi(`profiles?select=*&id=eq.${encodeURIComponent(s.user_id)}`);
+    setProfile((rows && rows[0]) || null);
+  }catch(e){ setProfile(null); }
+}
+
+function refreshMenuViews(){
+  categories = [...new Set(MENU_DATA.map(i => i.category))];
+  if(activeCategory !== 'all' && !categories.includes(activeCategory)) activeCategory = 'all';
+  renderChips();
+  renderMenu();
+  document.getElementById('stat-menu').textContent = MENU_DATA.length;
+  document.getElementById('tile-menu-sub').textContent = `${MENU_DATA.length} ${plural(MENU_DATA.length, ['позиция', 'позиции', 'позиций'])} · карточки и тест`;
+}
+// порядок: категории идут в порядке первого появления, внутри категории — по sort_order
+function applyMenuRows(rows){
+  const bySort = rows.slice().sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  const catOrder = [];
+  bySort.forEach(r => { if(!catOrder.includes(r.category)) catOrder.push(r.category); });
+  bySort.sort((a, b) => (catOrder.indexOf(a.category) - catOrder.indexOf(b.category)) || ((a.sort_order || 0) - (b.sort_order || 0)));
+  MENU_DATA.splice(0, MENU_DATA.length, ...bySort);
+  refreshMenuViews();
+}
+function saveMenuCache(){
+  try{ localStorage.setItem(MENU_CACHE_KEY, JSON.stringify({ rows: MENU_DATA, savedAt: Date.now() })); }catch(e){}
+}
+function loadMenuFromCache(){
+  if(!sbReady()) return;
+  try{
+    const c = JSON.parse(localStorage.getItem(MENU_CACHE_KEY));
+    if(c && Array.isArray(c.rows) && c.rows.length) applyMenuRows(c.rows);
+  }catch(e){}
+}
+async function loadMenuFromDb(){
+  if(!sbReady()) return;
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/menu_items?select=*&order=sort_order.asc`, {
+      headers: { 'apikey': SUPABASE_KEY },
+    });
+    if(!res.ok) return;
+    const rows = await res.json();
+    if(!Array.isArray(rows) || !rows.length) return;   // база пустая — остаёмся на встроенных составах
+    menuFromDb = true;
+    applyMenuRows(rows);
+    saveMenuCache();
+  }catch(e){ /* нет интернета — остаёмся на сохранённой копии */ }
+}
+
+// ---------- режим редактирования ----------
+function setEditMode(on){
+  editMode = on;
+  const btn = document.getElementById('edit-toggle');
+  btn.textContent = on ? '✓ Готово' : '✏️ Редактировать';
+  btn.classList.toggle('on', on);
+  document.getElementById('edit-banner').style.display = on ? '' : 'none';
+  if(on){
+    const listTab = document.querySelector('#screen-menu .tabbtn[data-view="menu-list"]');
+    if(listTab && !listTab.classList.contains('active')) listTab.click();
+  }
+  renderMenu();
+}
+document.getElementById('edit-toggle').onclick = () => setEditMode(!editMode);
+
+// ---------- окно редактирования ----------
+const editOverlay = document.getElementById('edit-overlay');
+const EF = {
+  name: document.getElementById('ef-name'),
+  category: document.getElementById('ef-category'),
+  subcategory: document.getElementById('ef-subcategory'),
+  kbju: document.getElementById('ef-kbju'),
+  composition: document.getElementById('ef-composition'),
+  description: document.getElementById('ef-description'),
+  method: document.getElementById('ef-method'),
+  note: document.getElementById('ef-note'),
+};
+let editingItem = null;
+
+function editOverlayOpen(){ return editOverlay.classList.contains('open'); }
+function efMessage(html){ document.getElementById('ef-message').innerHTML = html; }
+function closeEditor(){
+  editOverlay.classList.remove('open');
+  editingItem = null;
+  updateBackButton();
+}
+function fillDatalist(id, values){
+  document.getElementById(id).innerHTML = values.map(v => `<option value="${escapeXml(v)}"></option>`).join('');
+}
+function openEditor(item){
+  editingItem = item || null;
+  document.getElementById('edit-title').textContent = item ? 'Изменить позицию' : 'Новая позиция';
+  Object.keys(EF).forEach(k => { EF[k].value = (item && item[k]) || ''; });
+  if(!item && activeCategory !== 'all') EF.category.value = activeCategory;
+  fillDatalist('ef-category-list', categories);
+  fillDatalist('ef-sub-list', [...new Set(MENU_DATA.map(i => i.subcategory).filter(Boolean))]);
+  document.getElementById('ef-delete').style.display = item ? '' : 'none';
+  efMessage(menuFromDb ? '' :
+    '<div class="profile-error">Составы ещё не загружены из базы — сохранить изменения не получится. Проверь интернет и выполни SQL-файл в Supabase.</div>');
+  editOverlay.classList.add('open');
+  editOverlay.scrollTop = 0;
+  updateBackButton();
+}
+function efErrorText(e){
+  const m = String(e && e.message || '');
+  if(m === 'session-expired' || m === 'no-session') return 'Сессия закончилась — войди заново в разделе «Мой профиль».';
+  if(m === 'forbidden' || /permission|row-level|42501/i.test(m)) return 'Нет прав на изменение. Нужно войти как управляющий или администратор.';
+  return 'Не получилось сохранить. Проверь интернет и попробуй ещё раз.';
+}
+
+document.getElementById('ef-save').onclick = async () => {
+  if(!menuFromDb){ efMessage('<div class="profile-error">Составы ещё не загружены из базы — сохранить не получится.</div>'); return; }
+  const v = {};
+  Object.keys(EF).forEach(k => { const t = EF[k].value.trim(); v[k] = t || null; });
+  if(!v.name || !v.category){ efMessage('<div class="profile-error">Заполни название и категорию.</div>'); return; }
+  const dup = MENU_DATA.find(i => normName(i.name) === normName(v.name) && (!editingItem || i.id !== editingItem.id));
+  if(dup){ efMessage('<div class="profile-error">Позиция с таким названием уже есть.</div>'); return; }
+  const saveBtn = document.getElementById('ef-save');
+  saveBtn.disabled = true;
+  try{
+    let saved;
+    if(editingItem){
+      const rows = await sbApi('menu_items?id=eq.' + encodeURIComponent(editingItem.id), {
+        method: 'PATCH', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(v),
+      });
+      if(!rows || !rows.length) throw new Error('forbidden');
+      saved = rows[0];
+      // своё фото на этом устройстве переезжает вместе с новым названием
+      if(normName(editingItem.name) !== normName(saved.name)){
+        try{
+          const photo = localStorage.getItem(imgKey(editingItem));
+          if(photo){ localStorage.setItem(imgKey(saved), photo); localStorage.removeItem(imgKey(editingItem)); }
+        }catch(e){}
+      }
+      MENU_DATA.splice(MENU_DATA.indexOf(editingItem), 1, saved);
+    } else {
+      v.sort_order = MENU_DATA.reduce((m, i) => Math.max(m, i.sort_order || 0), 0) + 1;
+      const rows = await sbApi('menu_items', {
+        method: 'POST', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify(v),
+      });
+      if(!rows || !rows.length) throw new Error('forbidden');
+      saved = rows[0];
+      MENU_DATA.push(saved);
+    }
+    applyMenuRows(MENU_DATA.slice());
+    saveMenuCache();
+    closeEditor();
+  }catch(e){
+    efMessage(`<div class="profile-error">${efErrorText(e)}</div>`);
+  }finally{
+    saveBtn.disabled = false;
+  }
+};
+
+document.getElementById('ef-delete').onclick = async () => {
+  if(!editingItem) return;
+  if(!confirm(`Удалить «${editingItem.name}»? Позиция пропадёт у всех сотрудников.`)) return;
+  try{
+    const rows = await sbApi('menu_items?id=eq.' + encodeURIComponent(editingItem.id), {
+      method: 'DELETE', headers: { 'Prefer': 'return=representation' },
+    });
+    if(!rows || !rows.length) throw new Error('forbidden');
+    MENU_DATA.splice(MENU_DATA.indexOf(editingItem), 1);
+    applyMenuRows(MENU_DATA.slice());
+    saveMenuCache();
+    closeEditor();
+  }catch(e){
+    efMessage(`<div class="profile-error">${efErrorText(e).replace('сохранить', 'удалить')}</div>`);
+  }
+};
+document.getElementById('ef-cancel').onclick = closeEditor;
+document.getElementById('edit-close').onclick = closeEditor;
+editOverlay.addEventListener('click', e => { if(e.target === editOverlay) closeEditor(); });
+document.getElementById('add-item-btn').onclick = () => openEditor(null);
+
 // ============ Пасхалка ============
 (function(){
   let clicks = 0;
@@ -1972,6 +2819,9 @@ renderShift();
 migrateLegacyPhotos();
 renderChips();
 renderMenu();
+loadMenuFromCache();
+loadMenuFromDb();
+initRole();
 
 </script>
 </body>
