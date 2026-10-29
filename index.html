@@ -882,6 +882,7 @@ body{
   font-size: 13px;
 }
 .profile-name{
+  overflow-wrap: anywhere;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 22px;
@@ -916,6 +917,8 @@ body{
   margin-right: auto;
 }
 .staff-top{ display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.staff-top > div:first-child{ flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.staff-top .staff-edit-btn{ flex-shrink: 0; }
 .staff-name{ font-weight: 600; font-size: 14.5px; }
 .staff-meta{ font-size: 12.5px; color: var(--ink-soft); margin-top: 3px; line-height: 1.45; }
 .staff-badge{
@@ -929,6 +932,9 @@ body{
   border-radius: 6px;
   margin-left: 6px;
   vertical-align: middle;
+  display: inline-block;
+  white-space: nowrap;
+  margin-top: 2px;
 }
 .staff-form{ margin-top: 10px; display: none; }
 .staff-form select{
@@ -1190,7 +1196,7 @@ footer.note{
       <div id="admin-block" style="display:none;">
         <div class="home-group-label">Сотрудники</div>
         <div class="profile-text" style="max-width:560px;margin:0 auto 12px;">
-          Добавляй сотрудников, меняй имя, должность, ставку и права, сбрасывай пароль или удаляй аккаунт — всё прямо здесь.
+          Добавляй сотрудников и меняй их данные.
         </div>
         <div class="staff-row" id="add-staff-card">
           <button class="exam-save-btn" id="add-staff-open" type="button">+ Добавить сотрудника</button>
@@ -1203,8 +1209,8 @@ footer.note{
             <input class="search" id="ns-password" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="new-password">
             <label class="field-label" for="ns-position">Должность</label>
             <input class="search" id="ns-position" type="text">
-            <label class="field-label" for="ns-rate">Ставка</label>
-            <input class="search" id="ns-rate" type="text" placeholder="например: 250 ₽/час">
+            <label class="field-label" for="ns-rate">Ставка, ₽/час</label>
+            <input class="search" id="ns-rate" type="text" inputmode="decimal" placeholder="например: 280">
             <label class="field-label" for="ns-role">Права</label>
             <select id="ns-role">
           <option value="employee">Сотрудник (видит только свой профиль)</option>
@@ -2061,6 +2067,11 @@ async function sbApi(path, options, canRetry){
   return res.status === 204 ? null : res.json();
 }
 
+function formatRate(v){
+  const s = String(v || '').trim();
+  if(!s) return '';
+  return /^\d+([.,]\d+)?$/.test(s) ? `${s} ₽/час` : s;
+}
 const pfEls = {
   unconfigured: document.getElementById('profile-unconfigured'),
   loading: document.getElementById('profile-loading'),
@@ -2094,7 +2105,7 @@ async function loadMyProfile(){
     }
     document.getElementById('pf-name').textContent = me.full_name || '—';
     document.getElementById('pf-position').textContent = me.position || 'не указана';
-    document.getElementById('pf-rate').textContent = me.rate || 'не указана';
+    document.getElementById('pf-rate').textContent = formatRate(me.rate) || 'не указана';
     document.getElementById('pf-role').textContent = ROLE_LABELS[me.role] || 'Сотрудник';
     setProfile(me);
     const adminBlock = document.getElementById('admin-block');
@@ -2139,7 +2150,7 @@ function renderStaff(rows, me){
       <div class="staff-top">
         <div>
           <div class="staff-name">${escapeXml(row.full_name || '—')}${roleBadge}${isMe ? '<span class="staff-badge">это ты</span>' : ''}</div>
-          <div class="staff-meta">${escapeXml(row.position || 'должность не указана')} · ${escapeXml(row.rate || 'ставка не указана')}</div>
+          <div class="staff-meta">${escapeXml(row.position || 'должность не указана')} · ${escapeXml(formatRate(row.rate) || 'ставка не указана')}</div>
           <div class="staff-meta">логин: ${escapeXml(row.login || '—')}</div>
         </div>
         <button class="replace-btn staff-edit-btn" type="button" style="margin-top:0;">Изменить</button>
@@ -2149,8 +2160,8 @@ function renderStaff(rows, me){
         <input class="search sf-name" type="text">
         <label class="field-label">Должность</label>
         <input class="search sf-position" type="text">
-        <label class="field-label">Ставка</label>
-        <input class="search sf-rate" type="text" placeholder="например: 250 ₽/час">
+        <label class="field-label">Ставка, ₽/час</label>
+        <input class="search sf-rate" type="text" inputmode="decimal" placeholder="например: 280">
         <label class="field-label">Права</label>
         <select class="sf-role">
           <option value="employee">Сотрудник (видит только свой профиль)</option>
@@ -2220,11 +2231,11 @@ function renderStaff(rows, me){
         if(!updated || !updated.length) throw new Error('not-saved');
         Object.assign(row, updated[0]);
         nameEl.innerHTML = `${escapeXml(row.full_name || '—')}${(row.role === 'admin' ? '<span class="staff-badge">админ</span>' : row.role === 'manager' ? '<span class="staff-badge">управляющий</span>' : '')}${isMe ? '<span class="staff-badge">это ты</span>' : ''}`;
-        meta.textContent = `${row.position || 'должность не указана'} · ${row.rate || 'ставка не указана'}`;
+        meta.textContent = `${row.position || 'должность не указана'} · ${formatRate(row.rate) || 'ставка не указана'}`;
         if(isMe){
           document.getElementById('pf-name').textContent = row.full_name || '—';
           document.getElementById('pf-position').textContent = row.position || 'не указана';
-          document.getElementById('pf-rate').textContent = row.rate || 'не указана';
+          document.getElementById('pf-rate').textContent = formatRate(row.rate) || 'не указана';
         }
         form.style.display = 'none';
       }catch(e){
