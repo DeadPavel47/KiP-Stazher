@@ -1152,6 +1152,12 @@ body{
 .team-row .team-exams{ display: none; }
 .team-row.open .team-exams{ display: grid; }
 .team-row.open .team-side .acc-arrow{ transform: rotate(90deg); }
+.photo-actions{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.photo-actions .replace-btn{ margin-top: 0; }
+.photo-actions .replace-btn.primary{ background: var(--board); border-color: var(--board); color: var(--chalk); }
+.photo-actions .replace-btn.danger{ border-color: #C0402A; color: #C0402A; }
+.photo-hint{ font-size: 12px; color: var(--ink-soft); margin-top: 8px; line-height: 1.45; }
+.photo-hint:empty{ display: none; }
 .ef-select{
   width: 100%;
   padding: 10px 14px;
@@ -1492,7 +1498,14 @@ footer.note{
       </div>
 
       <input type="file" id="modal-file-input" accept="image/*" style="display:none;">
-      <button class="replace-btn" id="modal-replace">Заменить фото</button>
+      <input type="file" id="modal-shared-input" accept="image/*" style="display:none;">
+      <div class="photo-actions">
+        <button class="replace-btn primary" id="modal-shared-upload" type="button" style="display:none;">📷 Фото для всех</button>
+        <button class="replace-btn danger" id="modal-shared-remove" type="button" style="display:none;">Удалить фото для всех</button>
+        <button class="replace-btn" id="modal-replace" type="button">Своё фото</button>
+        <button class="replace-btn" id="modal-reset-local" type="button" style="display:none;">Убрать своё фото</button>
+      </div>
+      <div class="photo-hint" id="photo-hint"></div>
     </div>
   </div>
 </div>
@@ -1641,7 +1654,7 @@ function imgKey(item){ return 'custom-image-n:' + normName(item.name); }
 function setImgWithFallback(imgEl, item){
   imgEl.onerror = function(){ imgEl.onerror = null; imgEl.src = fallbackSvg(item.name); };
   loadCustomImage(item).then(custom => {
-    imgEl.src = custom || imgUrlFor(item);
+    imgEl.src = custom || item.photo_url || imgUrlFor(item);
   });
 }
 async function loadCustomImage(item){
@@ -1856,6 +1869,7 @@ function openModal(item){
     document.getElementById('modal-note').textContent = '💡 ' + item.note;
   } else { noteWrap.style.display = 'none'; }
   setImgWithFallback(document.getElementById('modal-img'), item);
+  refreshPhotoButtons(item);
   modalOverlay.classList.add('open');
   updateBackButton();
 }
@@ -1920,6 +1934,7 @@ document.getElementById('modal-file-input').addEventListener('change', function(
       return;
     }
     document.getElementById('modal-img').src = dataUrl;
+    refreshPhotoButtons(currentModalItem);
     renderMenu();
   }).catch(()=>{
     alert('Не получилось обработать это фото. Попробуй другое.');
@@ -2959,6 +2974,134 @@ document.querySelectorAll('.acc').forEach(acc => {
     try{ localStorage.setItem(key, open ? '1' : '0'); }catch(e){}
   });
 });
+
+// ---------- общие фото (загружают админ и управляющий, видят все) ----------
+const PHOTO_BUCKET = 'menu-photos';
+function photoPathFromUrl(url){
+  const marker = `/storage/v1/object/public/${PHOTO_BUCKET}/`;
+  const i = String(url || '').indexOf(marker);
+  return i === -1 ? null : url.slice(i + marker.length);
+}
+function dataUrlToBlob(dataUrl){
+  const [meta, b64] = dataUrl.split(',');
+  const mime = (meta.match(/data:([^;]+)/) || [])[1] || 'image/jpeg';
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+}
+async function storageRequest(method, path, body, canRetry){
+  if(canRetry === undefined) canRetry = true;
+  const s = loadSession();
+  if(!s) throw new Error('no-session');
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + s.access_token };
+  if(body){ headers['Content-Type'] = 'image/jpeg'; headers['cache-control'] = 'max-age=31536000'; }
+  let res;
+  try{
+    res = await fetch(`${SUPABASE_URL}/storage/v1/object/${PHOTO_BUCKET}/${path}`, { method, headers, body });
+  }catch(e){ throw new Error('network'); }
+  if(res.status === 401 && canRetry){
+    try{
+      const fresh = await authRequest('refresh_token', { refresh_token: s.refresh_token });
+      saveSession(Object.assign({}, s, fresh));
+    }catch(e){ clearSession(); throw new Error('session-expired'); }
+    return storageRequest(method, path, body, false);
+  }
+  if(!res.ok){
+    const text = await res.text();
+    if(res.status === 403 || /row-level security|unauthorized/i.test(text)) throw new Error('forbidden');
+    throw new Error(text || ('HTTP ' + res.status));
+  }
+  return true;
+}
+function photoErrorText(e){
+  const m = String(e && e.message || '');
+  if(m === 'forbidden') return 'Нет прав: фото для всех может загружать только администратор или управляющий.';
+  if(m === 'session-expired' || m === 'no-session') return 'Сессия закончилась — войди заново в «Моём профиле».';
+  if(m === 'network') return 'Нет связи с сервером. Проверь интернет.';
+  return 'Не получилось. Попробуй ещё раз.';
+}
+function setPhotoHint(text, isError){
+  const el = document.getElementById('photo-hint');
+  el.textContent = text || '';
+  el.style.color = isError ? '#C0402A' : '';
+}
+function refreshPhotoButtons(item){
+  if(!item) return;
+  const hasLocal = !!localStorage.getItem(imgKey(item));
+  const editor = canEditContent() && menuFromDb && !!item.id;
+  document.getElementById('modal-shared-upload').style.display = editor ? '' : 'none';
+  document.getElementById('modal-shared-upload').textContent = item.photo_url ? '📷 Заменить фото для всех' : '📷 Фото для всех';
+  document.getElementById('modal-shared-remove').style.display = editor && item.photo_url ? '' : 'none';
+  document.getElementById('modal-reset-local').style.display = hasLocal ? '' : 'none';
+  document.getElementById('modal-replace').textContent = hasLocal ? 'Заменить своё фото' : 'Своё фото';
+  if(hasLocal && item.photo_url) setPhotoHint('Сейчас у тебя показывается твоё фото. Общее фото увидишь, если уберёшь своё.');
+  else setPhotoHint('«Своё фото» видно только на этом телефоне.');
+}
+document.getElementById('modal-reset-local').onclick = () => {
+  const item = currentModalItem;
+  if(!item) return;
+  try{ localStorage.removeItem(imgKey(item)); }catch(e){}
+  setImgWithFallback(document.getElementById('modal-img'), item);
+  refreshPhotoButtons(item);
+  renderMenu();
+};
+document.getElementById('modal-shared-upload').onclick = () => document.getElementById('modal-shared-input').click();
+document.getElementById('modal-shared-input').addEventListener('change', async function(e){
+  const file = e.target.files[0];
+  e.target.value = '';
+  const item = currentModalItem;
+  if(!file || !item) return;
+  const btn = document.getElementById('modal-shared-upload');
+  btn.disabled = true;
+  setPhotoHint('Загружаю фото для всех…');
+  try{
+    const dataUrl = await compressImageFile(file, 900, 0.82);
+    const path = `items/${item.id}-${Date.now()}.jpg`;
+    await storageRequest('POST', path, dataUrlToBlob(dataUrl));
+    const url = `${SUPABASE_URL}/storage/v1/object/public/${PHOTO_BUCKET}/${path}`;
+    const rows = await sbApi('menu_items?id=eq.' + encodeURIComponent(item.id), {
+      method: 'PATCH', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify({ photo_url: url }),
+    });
+    if(!rows || !rows.length){
+      storageRequest('DELETE', path).catch(() => {});
+      throw new Error('forbidden');
+    }
+    const oldPath = photoPathFromUrl(item.photo_url);
+    Object.assign(item, rows[0]);
+    saveMenuCache();
+    if(oldPath) storageRequest('DELETE', oldPath).catch(() => {});
+    setImgWithFallback(document.getElementById('modal-img'), item);
+    refreshPhotoButtons(item);
+    setPhotoHint('Готово: фото увидят все сотрудники.' + (localStorage.getItem(imgKey(item)) ? ' У тебя пока показывается твоё фото.' : ''));
+    renderMenu();
+  }catch(err){
+    setPhotoHint(photoErrorText(err), true);
+  }finally{
+    btn.disabled = false;
+  }
+});
+document.getElementById('modal-shared-remove').onclick = async () => {
+  const item = currentModalItem;
+  if(!item || !item.photo_url) return;
+  if(!confirm(`Удалить общее фото у «${item.name}»? Оно пропадёт у всех сотрудников.`)) return;
+  try{
+    const rows = await sbApi('menu_items?id=eq.' + encodeURIComponent(item.id), {
+      method: 'PATCH', headers: { 'Prefer': 'return=representation' }, body: JSON.stringify({ photo_url: null }),
+    });
+    if(!rows || !rows.length) throw new Error('forbidden');
+    const oldPath = photoPathFromUrl(item.photo_url);
+    Object.assign(item, rows[0]);
+    saveMenuCache();
+    if(oldPath) storageRequest('DELETE', oldPath).catch(() => {});
+    setImgWithFallback(document.getElementById('modal-img'), item);
+    refreshPhotoButtons(item);
+    setPhotoHint('Общее фото удалено.');
+    renderMenu();
+  }catch(err){
+    setPhotoHint(photoErrorText(err), true);
+  }
+};
 
 document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
