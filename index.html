@@ -816,7 +816,8 @@ body{
 .sec-head{
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px 12px;
   margin-bottom: 14px;
 }
 .back-btn{
@@ -833,6 +834,8 @@ body{
 }
 .back-btn:hover{ border-color: var(--caramel); color: var(--ink); }
 .sec-title{
+  flex: 1 1 auto;
+  min-width: 0;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 22px;
@@ -966,6 +969,31 @@ body{
 .edit-modal .modal-body{ padding-top: 22px; }
 .edit-modal .modal-close{ top: 14px; right: 14px; }
 .edit-modal .search, .edit-modal .exam-edit-textarea{ width: 100%; }
+.sec-head.stacked{
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+.sec-head.stacked .sec-title{
+  flex: none;
+  text-align: center;
+}
+.sec-actions{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.ef-select{
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+}
 .edit-modal .exam-edit-textarea{ min-height: 70px; }
 .ef-delete{
   margin-left: auto;
@@ -1075,10 +1103,12 @@ footer.note{
   </section>
 
   <section class="screen" id="screen-menu">
-    <div class="sec-head">
-      <button class="back-btn" data-go="home" type="button">← На главную</button>
+    <div class="sec-head stacked">
       <div class="sec-title">Составы</div>
-      <button class="back-btn edit-toggle" id="edit-toggle" type="button" style="display:none;margin-left:auto;">✏️ Редактировать</button>
+      <div class="sec-actions">
+        <button class="back-btn" data-go="home" type="button">← На главную</button>
+        <button class="back-btn edit-toggle" id="edit-toggle" type="button" style="display:none;">✏️ Редактировать</button>
+      </div>
     </div>
     <div class="tabbar">
       <button class="tabbtn active" data-view="menu-list" type="button">Меню</button>
@@ -1288,12 +1318,12 @@ footer.note{
       <h2 class="modal-name" id="edit-title">Новая позиция</h2>
       <label class="field-label" for="ef-name">Название *</label>
       <input class="search" id="ef-name" type="text">
-      <label class="field-label" for="ef-category">Категория * (можно выбрать или вписать новую)</label>
-      <input class="search" id="ef-category" type="text" list="ef-category-list" autocomplete="off">
-      <datalist id="ef-category-list"></datalist>
-      <label class="field-label" for="ef-subcategory">Подкатегория</label>
-      <input class="search" id="ef-subcategory" type="text" list="ef-sub-list" autocomplete="off">
-      <datalist id="ef-sub-list"></datalist>
+      <label class="field-label" for="ef-category-select">Категория *</label>
+      <select class="ef-select" id="ef-category-select"></select>
+      <input class="search" id="ef-category" type="text" placeholder="Название новой категории" autocomplete="off" style="display:none;margin-top:8px;">
+      <label class="field-label" for="ef-sub-select">Подкатегория</label>
+      <select class="ef-select" id="ef-sub-select"></select>
+      <input class="search" id="ef-subcategory" type="text" placeholder="Название новой подкатегории" autocomplete="off" style="display:none;margin-top:8px;">
       <label class="field-label" for="ef-kbju">КБЖУ</label>
       <input class="search" id="ef-kbju" type="text" placeholder="например: Б-4,9; Ж-11; У-25; Ккал-220">
       <label class="field-label" for="ef-composition">Состав</label>
@@ -2486,16 +2516,63 @@ function closeEditor(){
   editingItem = null;
   updateBackButton();
 }
-function fillDatalist(id, values){
-  document.getElementById(id).innerHTML = values.map(v => `<option value="${escapeXml(v)}"></option>`).join('');
+const NEW_OPTION = '__new__';
+const catSelect = document.getElementById('ef-category-select');
+const subSelect = document.getElementById('ef-sub-select');
+function buildSelect(sel, values, opts){
+  const html = [];
+  if(opts.emptyLabel) html.push(`<option value="">${escapeXml(opts.emptyLabel)}</option>`);
+  values.forEach(v => html.push(`<option value="${escapeXml(v)}">${escapeXml(v)}</option>`));
+  html.push(`<option value="${NEW_OPTION}">${escapeXml(opts.newLabel)}</option>`);
+  sel.innerHTML = html.join('');
 }
+function setSelectValue(sel, input, value){
+  const exists = value !== NEW_OPTION && [...sel.options].some(o => o.value === value);
+  if(exists){
+    sel.value = value;
+    input.style.display = 'none';
+    input.value = value;
+  } else if(value){
+    sel.value = NEW_OPTION;
+    input.style.display = '';
+    input.value = value;
+  } else if(sel.options[0] && sel.options[0].value === ''){
+    sel.value = '';
+    input.style.display = 'none';
+    input.value = '';
+  } else {
+    sel.value = NEW_OPTION;
+    input.style.display = '';
+    input.value = '';
+  }
+}
+function onSelectChange(sel, input){
+  if(sel.value === NEW_OPTION){
+    input.style.display = '';
+    input.value = '';
+    input.focus();
+  } else {
+    input.style.display = 'none';
+    input.value = sel.value;
+  }
+}
+function subcategoriesOf(cat){
+  return [...new Set(MENU_DATA.filter(i => i.category === cat).map(i => i.subcategory).filter(Boolean))];
+}
+function refreshSubSelect(value){
+  buildSelect(subSelect, subcategoriesOf(EF.category.value.trim()), { emptyLabel: '— без подкатегории —', newLabel: '+ Новая подкатегория' });
+  setSelectValue(subSelect, EF.subcategory, value || '');
+}
+catSelect.addEventListener('change', () => { onSelectChange(catSelect, EF.category); refreshSubSelect(''); });
+subSelect.addEventListener('change', () => onSelectChange(subSelect, EF.subcategory));
 function openEditor(item){
   editingItem = item || null;
   document.getElementById('edit-title').textContent = item ? 'Изменить позицию' : 'Новая позиция';
   Object.keys(EF).forEach(k => { EF[k].value = (item && item[k]) || ''; });
-  if(!item && activeCategory !== 'all') EF.category.value = activeCategory;
-  fillDatalist('ef-category-list', categories);
-  fillDatalist('ef-sub-list', [...new Set(MENU_DATA.map(i => i.subcategory).filter(Boolean))]);
+  const startCategory = item ? item.category : (activeCategory !== 'all' ? activeCategory : (categories[0] || ''));
+  buildSelect(catSelect, categories, { newLabel: '+ Новая категория' });
+  setSelectValue(catSelect, EF.category, startCategory);
+  refreshSubSelect(item ? (item.subcategory || '') : '');
   document.getElementById('ef-delete').style.display = item ? '' : 'none';
   efMessage(menuFromDb ? '' :
     '<div class="profile-error">Составы ещё не загружены из базы — сохранить изменения не получится. Проверь интернет и выполни SQL-файл в Supabase.</div>');
