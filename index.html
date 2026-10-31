@@ -47,7 +47,7 @@ html{ color-scheme: only light; }
   .eq-card{ background: #fff !important; }
   .shift-section{ background: #fff !important; }
   .modal-text, .card-name, .modal-name, .exam-a-text{ color: #1A2333 !important; }
-  .home-tile, .back-btn, .profile-card, .staff-row, .team-row, .acc{ background: #fff !important; }
+  .home-tile, .back-btn, .profile-card, .staff-row, .team-row, .acc, .team-member{ background: #fff !important; }
   .acc-title{ color: #1A2333 !important; }
   .profile-name, .profile-card-title, .staff-name{ color: #1A2333 !important; }
   .home-tile-title, .sec-title{ color: #1A2333 !important; }
@@ -1147,7 +1147,7 @@ body{
 }
 .team-who .staff-name, .team-who .staff-meta{ display: block; }
 .team-side{ display: flex; align-items: center; align-self: center; flex-shrink: 0; }
-.team-who .team-last{ display: block; padding-top: 4px; white-space: normal; }
+.team-who .team-last{ display: block; padding-top: 4px; white-space: normal; font-family: var(--font-body); font-size: 12px; }
 .acc-head, .team-top{ -webkit-tap-highlight-color: transparent; }
 .team-row .team-exams{ display: none; }
 .team-row.open .team-exams{ display: grid; }
@@ -1158,6 +1158,136 @@ body{
 .photo-actions .replace-btn.danger{ border-color: #C0402A; color: #C0402A; }
 .photo-hint{ font-size: 12px; color: var(--ink-soft); margin-top: 8px; line-height: 1.45; }
 .photo-hint:empty{ display: none; }
+.pass-badges{ display: flex; flex-wrap: wrap; gap: 6px; }
+.pass-badges:empty{ display: none; }
+.pass-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3F5326;
+  background: #E4EEDA;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.pass-badge .pass-date{ font-weight: 400; opacity: .8; }
+.level-value{ display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.level-value .pass-badges{ justify-content: flex-end; }
+.staff-badges{ margin-top: 8px; }
+.team-who .pass-badges{ margin-top: 6px; }
+.pass-checks{ display: flex; flex-direction: column; gap: 8px; }
+.pass-check{ display: flex; align-items: center; gap: 10px; font-size: 14.5px; cursor: pointer; }
+.pass-check input{ width: 20px; height: 20px; accent-color: var(--sage); flex-shrink: 0; }
+.avatar{
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  color: #fff;
+  background: var(--caramel);
+  border: none;
+  padding: 0;
+}
+.avatar img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-lg{ width: 72px; height: 72px; font-size: 28px; cursor: pointer; position: relative; }
+.avatar-lg .avatar-cam{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--board);
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+}
+.avatar-lg{ overflow: visible; }
+.avatar-lg img{ border-radius: 50%; }
+.me-head{ display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+.me-text{ flex: 1; min-width: 0; }
+.me-text .profile-name{ margin-bottom: 4px; }
+.me-status{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.me-status span{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.me-status.empty{ color: var(--ink-soft); }
+.me-links{ display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; }
+.me-links .link-btn{ background: none; border: none; padding: 0; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--caramel-deep); cursor: pointer; }
+.me-status-form{ margin: 8px 0 4px; }
+.me-status-form .search{ width: 100%; font-size: 16px; }
+.me-links{ margin-bottom: 12px; }
+.me-msg{ font-size: 12.5px; margin: -4px 0 12px; }
+.me-msg:empty{ display: none; }
+.team-member{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.team-member .tm-text{ flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.tm-name{ font-weight: 600; font-size: 15px; }
+.tm-meta{ font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; line-height: 1.4; }
+.tm-status{
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  background: var(--paper);
+  border-radius: 10px;
+  padding: 4px 10px;
+  max-width: 100%;
+}
+.team-member .pass-badges{ margin-top: 6px; }
+.team-intro{ margin: 0 0 14px; }
+.team-count{ font-family: var(--font-display); font-weight: 600; font-size: 17px; color: var(--ink); }
+.team-hint{ font-size: 13px; color: var(--ink-soft); margin-top: 3px; line-height: 1.45; }
+.team-hint .link-btn{ background: none; border: none; padding: 0; font: inherit; font-weight: 600; color: var(--caramel-deep); cursor: pointer; white-space: nowrap; }
+.team-member{ flex-direction: column; align-items: stretch; gap: 0; }
+.tm-top{ display: flex; align-items: center; gap: 12px; }
+.tm-tags{ display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.tm-tags .staff-badge{ margin-left: 0; margin-top: 0; }
+.tm-level{ font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+.tm-level b{ color: var(--ink); font-weight: 600; }
+.team-member .tm-status{ display: block; margin-top: 10px; max-width: none; }
+.team-member .tm-badges{ margin-top: 10px; }
+.team-member .pass-badges{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.team-member .pass-badges:empty, .team-row .team-badges:empty, .staff-badges.pass-badges:empty{ display: none; }
+.team-member .pass-badge{ justify-content: center; text-align: center; white-space: normal; min-width: 0; }
+.team-member .pass-badge:last-child:nth-child(odd){ grid-column: 1 / -1; justify-self: center; min-width: calc(50% - 3px); }
+.team-row .team-badges, .staff-badges.pass-badges{ display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.team-row .team-badges{ margin-top: 10px; }
 .ef-select{
   width: 100%;
   padding: 10px 14px;
@@ -1270,6 +1400,14 @@ footer.note{
         <span class="home-tile-text">
           <span class="home-tile-title" style="display:block;">Мой профиль</span>
           <span class="home-tile-sub" style="display:block;">Вход, должность и ставка</span>
+        </span>
+        <span class="home-tile-arrow">›</span>
+      </button>
+      <button class="home-tile" data-go="team" type="button">
+        <span class="home-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.8"/><path d="M16 14.2c3.2.1 5.5 2.2 5.5 5.3"/></svg></span>
+        <span class="home-tile-text">
+          <span class="home-tile-title" style="display:block;">Команда</span>
+          <span class="home-tile-sub" style="display:block;">Коллеги, их уровни и статусы</span>
         </span>
         <span class="home-tile-arrow">›</span>
       </button>
@@ -1390,9 +1528,30 @@ footer.note{
 
     <div id="profile-view" style="display:none;">
       <div class="profile-card">
-        <div class="profile-name" id="pf-name"></div>
+        <div class="me-head">
+          <button class="avatar avatar-lg" id="me-avatar" type="button" aria-label="Сменить фото профиля"></button>
+          <div class="me-text">
+            <div class="profile-name" id="pf-name"></div>
+            <button class="me-status empty" id="me-status-btn" type="button"><span id="me-status-text">Добавить статус</span> ✏️</button>
+          </div>
+        </div>
+        <div class="me-status-form" id="me-status-form" style="display:none;">
+          <input class="search" id="me-status-input" type="text" maxlength="80" placeholder="Например: учу билеты 📚">
+          <div class="staff-actions">
+            <button class="exam-save-btn" id="me-status-save" type="button">Сохранить</button>
+            <button class="exam-cancel-btn" id="me-status-cancel" type="button">Отмена</button>
+          </div>
+        </div>
+        <div class="me-links">
+          <button class="link-btn" id="me-avatar-change" type="button">📷 Сменить фото</button>
+          <button class="link-btn" id="me-avatar-remove" type="button" style="display:none;">Убрать фото</button>
+          <button class="link-btn" id="me-status-clear" type="button" style="display:none;">Убрать статус</button>
+        </div>
+        <div class="me-msg" id="me-msg"></div>
+        <input type="file" id="me-avatar-input" accept="image/*" style="display:none;">
         <div class="profile-row"><span class="profile-label">Должность</span><span class="profile-value" id="pf-position"></span></div>
         <div class="profile-row"><span class="profile-label">Ставка</span><span class="profile-value" id="pf-rate"></span></div>
+        <div class="profile-row"><span class="profile-label">Уровень</span><span class="profile-value level-value" id="pf-level"></span></div>
         <div class="profile-row"><span class="profile-label">Доступ</span><span class="profile-value" id="pf-role"></span></div>
         <button class="replace-btn" id="logout-btn" type="button" style="margin-top:14px;border-color:var(--ink-soft);color:var(--ink-soft);">Выйти</button>
       </div>
@@ -1454,6 +1613,14 @@ footer.note{
       <div class="profile-text" id="profile-error-text"></div>
       <button class="replace-btn" id="profile-retry" type="button" style="margin-top:12px;">Повторить</button>
     </div>
+  </section>
+
+  <section class="screen" id="screen-team">
+    <div class="sec-head">
+      <button class="back-btn" data-go="home" type="button">← На главную</button>
+      <div class="sec-title">Команда</div>
+    </div>
+    <div id="team-dir"></div>
   </section>
 
   <section class="screen" id="screen-shift">
@@ -1757,6 +1924,7 @@ function showScreen(name){
   window.scrollTo(0, 0);
   updateBackButton();
   if(name === 'profile') profileOnShow();
+  if(name === 'team') loadTeamDirectory();
 }
 document.querySelectorAll('[data-go]').forEach(el => {
   el.addEventListener('click', () => showScreen(el.dataset.go));
@@ -2369,6 +2537,7 @@ async function loadMyProfile(){
     }
     fillMyProfile(me);
     setProfile(me);
+    loadMyExtras(me);
     const adminBlock = document.getElementById('admin-block');
     pfShow('view');
     const teamBlock = document.getElementById('team-block');
@@ -2405,6 +2574,7 @@ function fillMyProfile(me){
   document.getElementById('pf-position').textContent = me.position || 'не указана';
   document.getElementById('pf-rate').textContent = formatRate(me.rate) || 'не указана';
   document.getElementById('pf-role').textContent = ROLE_LABELS[me.role] || 'Сотрудник';
+  document.getElementById('pf-level').innerHTML = `<span>${levelLabel(me)}</span><span class="pass-badges">${passBadgesHtml(me, true)}</span>`;
 }
 
 async function loadStaff(me){
@@ -2433,6 +2603,7 @@ function renderStaff(rows, me){
           <div class="staff-name">${escapeXml(row.full_name || '—')}${roleBadge}${isMe ? '<span class="staff-badge">это ты</span>' : ''}</div>
           <div class="staff-meta">${escapeXml(row.position || 'должность не указана')} · ${escapeXml(formatRate(row.rate) || 'ставка не указана')}</div>
           <div class="staff-meta">логин: ${escapeXml(row.login || '—')}</div>
+          <div class="pass-badges staff-badges">${passBadgesHtml(row, false)}</div>
         </div>
         <button class="replace-btn staff-edit-btn" type="button" style="margin-top:0;">Изменить</button>
       </div>
@@ -2449,6 +2620,12 @@ function renderStaff(rows, me){
           <option value="manager">Управляющий (редактирует составы)</option>
           <option value="admin">Администратор (составы, сотрудники и ставки)</option>
         </select>
+        <label class="field-label">Сдал экзамены</label>
+        <div class="pass-checks">
+          <label class="pass-check"><input type="checkbox" class="sf-pass" value="cashier"> Кассир</label>
+          <label class="pass-check"><input type="checkbox" class="sf-pass" value="cb"> Кассир-бариста</label>
+          <label class="pass-check"><input type="checkbox" class="sf-pass" value="barista"> Бариста</label>
+        </div>
         <label class="field-label">Новый пароль</label>
         <div style="display:flex;gap:8px;align-items:center;">
           <input class="search sf-password" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="new-password" placeholder="не короче 6 символов" style="flex:1;min-width:0;">
@@ -2476,6 +2653,8 @@ function renderStaff(rows, me){
       rateIn.value = row.rate || '';
       roleIn.value = row.role;
       roleIn.disabled = isMe;
+      const passed = passedMap(row);
+      el.querySelectorAll('.sf-pass').forEach(cb => { cb.checked = !!passed[cb.value]; });
       msg.innerHTML = isMe ? '<div class="profile-text" style="margin-top:8px;">Свои права менять нельзя, чтобы не остаться без администратора.</div>' : '';
       form.style.display = 'block';
     };
@@ -2503,6 +2682,12 @@ function renderStaff(rows, me){
       if(!fullName){ msg.innerHTML = '<div class="profile-error">Имя не может быть пустым.</div>'; return; }
       const patch = { full_name: fullName, position: posIn.value.trim() || null, rate: rateIn.value.trim() || null };
       if(!isMe) patch.role = roleIn.value;
+      const prevPassed = passedMap(row);
+      const nextPassed = {};
+      el.querySelectorAll('.sf-pass').forEach(cb => {
+        if(cb.checked) nextPassed[cb.value] = prevPassed[cb.value] || todayIso();
+      });
+      patch.passed_exams = nextPassed;
       try{
         const updated = await sbApi('profiles?id=eq.' + encodeURIComponent(row.id), {
           method: 'PATCH',
@@ -2513,10 +2698,11 @@ function renderStaff(rows, me){
         Object.assign(row, updated[0]);
         nameEl.innerHTML = `${escapeXml(row.full_name || '—')}${(row.role === 'admin' ? '<span class="staff-badge">админ</span>' : row.role === 'manager' ? '<span class="staff-badge">управляющий</span>' : '')}${isMe ? '<span class="staff-badge">это ты</span>' : ''}`;
         meta.textContent = `${row.position || 'должность не указана'} · ${formatRate(row.rate) || 'ставка не указана'}`;
+        el.querySelector('.staff-badges').innerHTML = passBadgesHtml(row, false);
         if(isMe){
-          document.getElementById('pf-name').textContent = row.full_name || '—';
-          document.getElementById('pf-position').textContent = row.position || 'не указана';
-          document.getElementById('pf-rate').textContent = formatRate(row.rate) || 'не указана';
+          fillMyProfile(row);
+          if(currentProfile) currentProfile.passed_exams = row.passed_exams;
+          refreshProgressViews();
         }
         form.style.display = 'none';
       }catch(e){
@@ -2846,14 +3032,15 @@ function refreshProgressViews(){
   EXAM_KEYS.forEach(key => {
     const c = examCounts(key);
     const base = `${c.total} ${plural(c.total, ['вопрос', 'вопроса', 'вопросов'])}`;
-    document.getElementById(tileIds[key]).textContent = c.known ? `${base} · выучено ${c.known}` : `${base} · билеты и тест`;
+    const passedNow = passedMap(currentProfile)[key];
+    document.getElementById(tileIds[key]).textContent = passedNow ? `${base} · экзамен сдан 🏅` : c.known ? `${base} · выучено ${c.known}` : `${base} · билеты и тест`;
   });
   const box = document.getElementById('progress-rows');
   if(box){
     box.innerHTML = EXAM_KEYS.map(key => {
       const c = examCounts(key);
       const pct = Math.round(c.known / c.total * 100);
-      const extra = [c.review ? `на повторении: ${c.review}` : '', c.answers ? `своих ответов: ${c.answers}` : ''].filter(Boolean).join(' · ');
+      const extra = [passedMap(currentProfile)[key] ? `🏅 экзамен сдан ${formatDay(passedMap(currentProfile)[key])}` : '', c.review ? `на повторении: ${c.review}` : '', c.answers ? `своих ответов: ${c.answers}` : ''].filter(Boolean).join(' · ');
       return `<button class="progress-row" type="button" data-exam="${key}">
         <span class="progress-row-top"><span class="progress-name">${EXAM_TITLES[key]}</span><span class="progress-count">${c.known} из ${c.total} · ${pct}%</span></span>
         <span class="progress-bar"><span style="width:${pct}%"></span></span>
@@ -2927,7 +3114,7 @@ function renderTeam(staff, rows){
       const pct = Math.round(e.known / total * 100);
       const extra = [e.review ? `на повторении: ${e.review}` : '', e.answers ? `своих ответов: ${e.answers}` : ''].filter(Boolean).join(' · ');
       return `<div class="team-exam">
-          <div class="team-exam-top"><span>${EXAM_TITLES[key]}</span><span class="progress-count">${e.known} из ${total}</span></div>
+          <div class="team-exam-top"><span>${EXAM_TITLES[key]}${passedMap(s)[key] ? ' 🏅' : ''}</span><span class="progress-count">${e.known} из ${total}</span></div>
           <span class="progress-bar"><span style="width:${pct}%"></span></span>
           <span class="progress-extra">${extra}</span>
         </div>`;
@@ -2937,12 +3124,14 @@ function renderTeam(staff, rows){
     return `<div class="team-row">
         <button class="team-top" type="button">
           <span class="team-who">
-            <span class="staff-name">${escapeXml(s.full_name || s.login || '—')}${badge}</span>
-            <span class="staff-meta">${escapeXml(s.position || 'должность не указана')} · выучено ${knownAll} из ${totalAll}</span>
-            <span class="team-last">${relativeDay(st.last)}</span>
+            <span class="staff-name">${escapeXml(s.full_name || '—')}${badge}</span>
+            <span class="staff-meta">${escapeXml(s.position || 'Должность не указана')}</span>
+            <span class="tm-level" style="display:block;">Уровень: <b>${levelLabel(s)}</b></span>
+            <span class="team-last">Выучено ${knownAll} из ${totalAll} · ${relativeDay(st.last)}</span>
           </span>
           <span class="team-side"><span class="acc-arrow">▸</span></span>
         </button>
+        <div class="pass-badges team-badges">${passBadgesHtml(s, false)}</div>
         <div class="team-exams">${exams}</div>
       </div>`;
   }).join('');
@@ -2956,7 +3145,7 @@ async function loadTeam(me){
   document.getElementById('team-summary').textContent = '';
   try{
     const [staff, rows] = await Promise.all([
-      sbApi('staff_public?select=id,full_name,login,position,role&order=full_name.asc'),
+      sbApi('staff_public?select=id,full_name,position,role,passed_exams&order=full_name.asc'),
       fetchAllTeamProgress(),
     ]);
     renderTeam((staff || []).filter(s => s.id !== me.id), rows);
@@ -2990,7 +3179,8 @@ function dataUrlToBlob(dataUrl){
   for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
   return new Blob([bytes], { type: mime });
 }
-async function storageRequest(method, path, body, canRetry){
+function storageRequest(method, path, body, canRetry){ return storageCall(PHOTO_BUCKET, method, path, body, canRetry); }
+async function storageCall(bucket, method, path, body, canRetry){
   if(canRetry === undefined) canRetry = true;
   const s = loadSession();
   if(!s) throw new Error('no-session');
@@ -2998,14 +3188,14 @@ async function storageRequest(method, path, body, canRetry){
   if(body){ headers['Content-Type'] = 'image/jpeg'; headers['cache-control'] = 'max-age=31536000'; }
   let res;
   try{
-    res = await fetch(`${SUPABASE_URL}/storage/v1/object/${PHOTO_BUCKET}/${path}`, { method, headers, body });
+    res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, { method, headers, body });
   }catch(e){ throw new Error('network'); }
   if(res.status === 401 && canRetry){
     try{
       const fresh = await authRequest('refresh_token', { refresh_token: s.refresh_token });
       saveSession(Object.assign({}, s, fresh));
     }catch(e){ clearSession(); throw new Error('session-expired'); }
-    return storageRequest(method, path, body, false);
+    return storageCall(bucket, method, path, body, false);
   }
   if(!res.ok){
     const text = await res.text();
@@ -3103,6 +3293,211 @@ document.getElementById('modal-shared-remove').onclick = async () => {
   }
 };
 
+var LEVEL_ORDER = ['cashier', 'cb', 'barista'];
+function passedMap(p){
+  const m = p && p.passed_exams;
+  return (m && typeof m === 'object' && !Array.isArray(m)) ? m : {};
+}
+function levelLabel(p){
+  const m = passedMap(p);
+  let level = 'Стажёр';
+  LEVEL_ORDER.forEach(k => { if(m[k]) level = EXAM_TITLES[k]; });
+  return level;
+}
+function todayIso(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+function formatDay(iso){
+  const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : '';
+}
+function passBadgesHtml(p, withDates){
+  const m = passedMap(p);
+  return LEVEL_ORDER.filter(k => m[k]).map(k =>
+    `<span class="pass-badge">🏅 ${EXAM_TITLES[k]}${withDates && formatDay(m[k]) ? ` <span class="pass-date">${formatDay(m[k])}</span>` : ''}</span>`
+  ).join('');
+}
+
+// ---------- аватар, статус и раздел «Команда» ----------
+var myExtras = null;
+var AVATAR_COLORS = ['#3B63B0', '#28437C', '#4F7BC9', '#5A6FA8', '#2F6F8F', '#6B5BA8', '#3E7F6B', '#8C5A6B'];
+function avatarHtml(name, url){
+  if(url) return `<img src="${escapeXml(url)}" alt="" loading="lazy" onerror="this.remove()">`;
+  const letter = (String(name || '?').trim()[0] || '?').toUpperCase();
+  return escapeXml(letter);
+}
+function avatarColor(name){
+  let h = 0;
+  for(const ch of String(name || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function meMsg(text, isError){
+  const el = document.getElementById('me-msg');
+  el.textContent = text || '';
+  el.style.color = isError ? '#C0402A' : 'var(--ink-soft)';
+}
+function renderMyExtras(){
+  const me = currentProfile;
+  const av = document.getElementById('me-avatar');
+  const url = myExtras && myExtras.avatar_url;
+  av.style.background = url ? 'var(--paper-deep)' : avatarColor(me && me.full_name);
+  av.innerHTML = avatarHtml(me && me.full_name, url) + '<span class="avatar-cam">📷</span>';
+  const status = myExtras && myExtras.status;
+  const btn = document.getElementById('me-status-btn');
+  document.getElementById('me-status-text').textContent = status || 'Добавить статус';
+  btn.classList.toggle('empty', !status);
+  document.getElementById('me-avatar-remove').style.display = url ? '' : 'none';
+  document.getElementById('me-status-clear').style.display = status ? '' : 'none';
+}
+async function loadMyExtras(me){
+  renderMyExtras();
+  try{
+    const rows = await sbApi('profile_extras?select=user_id,avatar_url,status&user_id=eq.' + encodeURIComponent(me.id));
+    myExtras = (rows && rows[0]) || null;
+  }catch(e){ /* без связи — покажем букву вместо фото */ }
+  renderMyExtras();
+}
+async function saveMyExtras(fields){
+  const s = loadSession();
+  if(!s) throw new Error('no-session');
+  const rows = await sbApi('profile_extras?on_conflict=user_id', {
+    method: 'POST',
+    headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify([Object.assign({ user_id: s.user_id, updated_at: new Date().toISOString() }, fields)]),
+  });
+  if(!rows || !rows.length) throw new Error('forbidden');
+  myExtras = rows[0];
+  renderMyExtras();
+}
+function avatarPathFromUrl(url){
+  const marker = '/storage/v1/object/public/avatars/';
+  const i = String(url || '').indexOf(marker);
+  return i === -1 ? null : url.slice(i + marker.length);
+}
+function squareCropFile(file, size, quality){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    const img = new Image();
+    reader.onload = ev => { img.src = ev.target.result; };
+    reader.onerror = reject;
+    img.onload = () => {
+      const side = Math.min(img.width, img.height);
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function extrasErrorText(e){
+  const m = String(e && e.message || '');
+  if(m === 'session-expired' || m === 'no-session') return 'Сессия закончилась — войди заново.';
+  if(m === 'network') return 'Нет связи с сервером. Проверь интернет.';
+  return 'Не получилось сохранить. Попробуй ещё раз.';
+}
+document.getElementById('me-avatar').onclick = () => document.getElementById('me-avatar-input').click();
+document.getElementById('me-avatar-change').onclick = () => document.getElementById('me-avatar-input').click();
+document.getElementById('me-avatar-input').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file || !currentProfile) return;
+  meMsg('Загружаю фото…');
+  try{
+    const s = loadSession();
+    if(!s) throw new Error('no-session');
+    const dataUrl = await squareCropFile(file, 320, 0.85);
+    const path = `${s.user_id}/${Date.now()}.jpg`;
+    await storageCall('avatars', 'POST', path, dataUrlToBlob(dataUrl));
+    const oldPath = avatarPathFromUrl(myExtras && myExtras.avatar_url);
+    await saveMyExtras({ avatar_url: `${SUPABASE_URL}/storage/v1/object/public/avatars/${path}` });
+    if(oldPath) storageCall('avatars', 'DELETE', oldPath).catch(() => {});
+    meMsg('Фото обновлено — его видит вся команда.');
+  }catch(err){ meMsg(extrasErrorText(err), true); }
+});
+document.getElementById('me-avatar-remove').onclick = async () => {
+  if(!myExtras || !myExtras.avatar_url) return;
+  try{
+    const oldPath = avatarPathFromUrl(myExtras.avatar_url);
+    await saveMyExtras({ avatar_url: null });
+    if(oldPath) storageCall('avatars', 'DELETE', oldPath).catch(() => {});
+    meMsg('Фото убрано.');
+  }catch(err){ meMsg(extrasErrorText(err), true); }
+};
+document.getElementById('me-status-btn').onclick = () => {
+  document.getElementById('me-status-input').value = (myExtras && myExtras.status) || '';
+  document.getElementById('me-status-form').style.display = 'block';
+  document.getElementById('me-status-input').focus();
+};
+document.getElementById('me-status-cancel').onclick = () => { document.getElementById('me-status-form').style.display = 'none'; };
+document.getElementById('me-status-save').onclick = async () => {
+  const text = document.getElementById('me-status-input').value.trim().slice(0, 80);
+  try{
+    await saveMyExtras({ status: text || null });
+    document.getElementById('me-status-form').style.display = 'none';
+    meMsg(text ? 'Статус сохранён.' : 'Статус убран.');
+  }catch(err){ meMsg(extrasErrorText(err), true); }
+};
+document.getElementById('me-status-clear').onclick = async () => {
+  try{ await saveMyExtras({ status: null }); meMsg('Статус убран.'); }
+  catch(err){ meMsg(extrasErrorText(err), true); }
+};
+
+async function loadTeamDirectory(){
+  const box = document.getElementById('team-dir');
+  if(!sbReady()){
+    box.innerHTML = '<div class="profile-card"><div class="profile-text">Раздел пока не подключён.</div></div>';
+    return;
+  }
+  if(!loadSession()){
+    box.innerHTML = '<div class="profile-card"><div class="profile-card-title">Только для сотрудников</div><div class="profile-text">Войди в «Моём профиле», чтобы видеть коллег.</div><button class="exam-save-btn" type="button" id="team-dir-login" style="margin-top:14px;">Войти</button></div>';
+    document.getElementById('team-dir-login').onclick = () => showScreen('profile');
+    return;
+  }
+  if(!box.querySelector('.team-member')) box.innerHTML = '<div class="team-empty">Загружаю…</div>';
+  try{
+    const [staff, extras] = await Promise.all([
+      sbApi('staff_public?select=id,full_name,position,role,passed_exams&order=full_name.asc'),
+      sbApi('profile_extras?select=user_id,avatar_url,status'),
+    ]);
+    const ex = {};
+    (extras || []).forEach(r => { ex[r.user_id] = r; });
+    const myId = (loadSession() || {}).user_id;
+    const people = staff || [];
+    box.innerHTML = `<div class="team-intro">
+        <div class="team-count">${people.length} ${plural(people.length, ['человек', 'человека', 'человек'])} в команде</div>
+        <div class="team-hint">Фото и статус — в <button class="link-btn team-profile-link" type="button">«Моём&nbsp;профиле»</button></div>
+      </div>` +
+      people.map(s => {
+        const e = ex[s.id] || {};
+        const roleBadge = s.role === 'admin' ? '<span class="staff-badge">админ</span>' : s.role === 'manager' ? '<span class="staff-badge">управляющий</span>' : '';
+        return `<div class="team-member">
+          <div class="tm-top">
+            <span class="avatar" style="background:${e.avatar_url ? 'var(--paper-deep)' : avatarColor(s.full_name)}">${avatarHtml(s.full_name, e.avatar_url)}</span>
+            <div class="tm-text">
+              <div class="tm-name">${escapeXml(s.full_name || '—')}</div>
+              ${roleBadge || s.id === myId ? `<div class="tm-tags">${roleBadge}${s.id === myId ? '<span class="staff-badge">это ты</span>' : ''}</div>` : ''}
+              <div class="tm-meta">${escapeXml(s.position || 'Должность не указана')}</div>
+              <div class="tm-level">Уровень: <b>${levelLabel(s)}</b></div>
+            </div>
+          </div>
+          ${e.status ? `<div class="tm-status">${escapeXml(e.status)}</div>` : ''}
+          <div class="pass-badges tm-badges">${passBadgesHtml(s, false)}</div>
+        </div>`;
+      }).join('');
+    const link = box.querySelector('.team-profile-link');
+    if(link) link.onclick = () => showScreen('profile');
+  }catch(err){
+    box.innerHTML = '<div class="profile-error">Не получилось загрузить команду. Проверь интернет и открой раздел ещё раз.</div>';
+  }
+}
+
 document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
   const errEl = document.getElementById('login-error');
@@ -3148,6 +3543,9 @@ document.getElementById('logout-btn').onclick = async () => {
   setProfile(null);
   document.getElementById('staff-list').innerHTML = '';
   document.getElementById('team-list').innerHTML = '';
+  myExtras = null;
+  document.getElementById('team-dir').innerHTML = '';
+  renderMyExtras();
   document.getElementById('team-block').style.display = 'none';
   document.getElementById('add-staff-form').style.display = 'none';
   document.getElementById('add-staff-open').style.display = '';
@@ -3171,6 +3569,7 @@ function canEditContent(){
 }
 function setProfile(p){
   currentProfile = p;
+  if(typeof refreshProgressViews === 'function' && document.getElementById('tile-cashier-sub')) refreshProgressViews();
   if(p && syncState.userId !== p.id){
     syncState.userId = p.id;
     pullProgress();
